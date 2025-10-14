@@ -17,7 +17,7 @@ pool.query("SELECT NOW()", (err, res) => {
     console.error("❌ Database connection failed:", err.message);
     console.log("💡 Check your .env file and PostgreSQL password");
   } else {
-    console.log("✅ Database connected successfully at:", res.rows[0].now);
+    console.log("✅ Database connected successfully!");
   }
 });
 
@@ -37,8 +37,6 @@ app.get("/test-db", async (req, res) => {
     res.json({
       success: true,
       message: "Database connection successful!",
-      databaseTime: result.rows[0].current_time,
-      timestamp: new Date().toISOString(),
     });
   } catch (error) {
     res.status(500).json({
