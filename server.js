@@ -50,7 +50,4 @@ app.get("/test-db", async (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
-  console.log(`🌐 Test URLs:`);
-  console.log(`   http://localhost:${PORT}/`);
-  console.log(`   http://localhost:${PORT}/test-db`);
 });
