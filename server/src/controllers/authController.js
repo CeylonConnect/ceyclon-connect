@@ -26,7 +26,7 @@ const signupUser = async (req, res) => {
       user: newUser,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error in signupUser:", error); // Detailed logging
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -57,7 +57,7 @@ const loginUser = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error in loginUser:", error); // Detailed logging
     res.status(500).json({ message: "Server error" });
   }
 };
