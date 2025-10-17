@@ -11,6 +11,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const authRoutes = require("./src/routes/authRoutes");
+app.use("/api/auth", authRoutes);
+
 // Test database connection on startup
 pool.query("SELECT NOW()", (err, res) => {
   if (err) {
