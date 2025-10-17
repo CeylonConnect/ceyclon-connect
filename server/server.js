@@ -2,27 +2,32 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
-// Import database connection
+// Import database connection and routes
 const pool = require("./src/config/database");
+const authRoutes = require("./src/routes/authRoutes");
 
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+// --- Middleware Setup ---
 
-const authRoutes = require("./src/routes/authRoutes");
+// 1. CORS Configuration: Explicitly allow requests from your frontend
+const corsOptions = {
+  origin: "http://localhost:5173", // Use your frontend's actual port
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
+
+// 2. Body Parsers: Use the modern, built-in Express parsers
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+// --- API Routes ---
+// Mount the authentication routes at the correct path
 app.use("/api/auth", authRoutes);
 
-// Test database connection on startup
-pool.query("SELECT NOW()", (err, res) => {
-  if (err) {
-    console.error("❌ Database connection failed:", err.message);
-    console.log("💡 Check your .env file and PostgreSQL password");
-  } else {
-    console.log("✅ Database connected successfully!");
-  }
-});
+
+// --- Server and Database Health Checks ---
 
 // Simple test route
 app.get("/", (req, res) => {
@@ -40,6 +45,7 @@ app.get("/test-db", async (req, res) => {
     res.json({
       success: true,
       message: "Database connection successful!",
+      time: result.rows[0].current_time,
     });
   } catch (error) {
     res.status(500).json({
@@ -50,7 +56,14 @@ app.get("/test-db", async (req, res) => {
   }
 });
 
+
+// --- Server Initialization ---
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
+  // Optional: You can keep the initial DB connection test if you like
+  pool.query("SELECT NOW()")
+    .then(res => console.log("✅ Database connected successfully!"))
+    .catch(err => console.error("❌ Database connection failed:", err.message));
 });
