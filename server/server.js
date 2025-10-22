@@ -5,6 +5,8 @@ require("dotenv").config();
 // Import database connection and routes
 const pool = require("./src/config/database");
 const authRoutes = require("./src/routes/authRoutes");
+const reviewRoutes = require('./src/routes/reviewRoutes');
+
 
 const app = express();
 
@@ -20,6 +22,10 @@ app.use(cors(corsOptions));
 // 2. Body Parsers: Use the modern, built-in Express parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/reviews', reviewRoutes);
+
 
 
 // --- API Routes ---
