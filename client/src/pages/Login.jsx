@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { toast } from "react-toastify";
 import axios from "axios";
+import "../Login.css"; 
 
 const Login = () => {
   const [state, setState] = useState("Login");
@@ -60,139 +61,112 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-6 sm:px-0 bg-white">
+    <div className="login-page">
       <img
         src={assets.logo}
         alt="Logo"
         onClick={() => navigate("/")}
-        className="absolute left-5 sm:left-20 top-5 w-48 sm:w-64 cursor-pointer"
+        className="login-logo"
       />
 
-      <div className="bg-slate-900 p-10 rounded-lg shadow-lg w-full sm:w-96 text-orange-300 text-sm">
-        <h2 className="text-center text-3xl font-semibold text-white mb-3">
+      <div className="login-container">
+        <h2 className="login-title">
           {state === "Sign Up" ? "Create Account" : "Login Account"}
         </h2>
 
-        <p className="text-center text-sm mb-6">
+        <p className="login-subtitle">
           {state === "Sign Up"
             ? "Create your account below"
             : "Login to your account"}
         </p>
 
-        <form onSubmit={onSubmitHandler}>
+        <form onSubmit={onSubmitHandler} className="login-form">
           {state === "Sign Up" && (
             <>
-              <div className="flex items-center mb-4 gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
-                <img
-                  src={assets.person_icon}
-                  alt="Person"
-                  className="w-5 h-5 filter invert brightness-0 saturate-0"
-                />
+              <div className="login-input-group">
+                <img src={assets.person_icon} alt="Person" className="login-icon" />
                 <input
                   onChange={(e) => setFirstName(e.target.value)}
                   value={firstName}
                   type="text"
                   placeholder="First Name"
                   required
-                  className="outline-none bg-transparent w-full text-white placeholder-white/60"
+                  className="login-input"
                 />
               </div>
 
-              <div className="flex items-center mb-4 gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
-                <img
-                  src={assets.person_icon}
-                  alt="Person"
-                  className="w-5 h-5 filter invert brightness-0 saturate-0"
-                />
+              <div className="login-input-group">
+                <img src={assets.person_icon} alt="Person" className="login-icon" />
                 <input
                   onChange={(e) => setLastName(e.target.value)}
                   value={lastName}
                   type="text"
                   placeholder="Last Name"
                   required
-                  className="outline-none bg-transparent w-full text-white placeholder-white/60"
+                  className="login-input"
                 />
               </div>
 
-              <div className="flex items-center mb-4 gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
-                <img
-                  src={assets.phone}
-                  alt="Phone"
-                  className="w-5 h-5 filter invert brightness-0 saturate-0"
-                />
+              <div className="login-input-group">
+                <img src={assets.phone} alt="Phone" className="login-icon" />
                 <input
                   onChange={(e) => setPhone(e.target.value)}
                   value={phone}
                   type="text"
                   placeholder="Phone Number"
                   required
-                  className="outline-none bg-transparent w-full text-white placeholder-white/60"
+                  className="login-input"
                 />
               </div>
             </>
           )}
 
-          <div className="flex items-center mb-4 gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
-            <img
-              src={assets.mail_icon}
-              alt="Email"
-              className="w-5 h-5 filter invert brightness-0 saturate-0"
-            />
+          <div className="login-input-group">
+            <img src={assets.mail_icon} alt="Email" className="login-icon" />
             <input
               onChange={(e) => setEmail(e.target.value)}
               value={email}
               type="email"
               placeholder="Email"
               required
-              className="outline-none bg-transparent w-full text-white placeholder-white/60"
+              className="login-input"
             />
           </div>
 
-          <div className="flex items-center mb-4 gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
-            <img
-              src={assets.lock_icon}
-              alt="Lock"
-              className="w-5 h-5 filter invert brightness-0 saturate-0"
-            />
+          <div className="login-input-group">
+            <img src={assets.lock_icon} alt="Lock" className="login-icon" />
             <input
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               type="password"
               placeholder="Password"
               required
-              className="outline-none bg-transparent w-full text-white placeholder-white/60"
+              className="login-input"
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-tr from-orange-400 to-red-400 hover:from-orange-400 hover:to-red-300 text-white py-2.5 rounded-full font-semibold transition-all mb-4 cursor-pointer"
-          >
+          <button type="submit" className="login-button">
             {state}
           </button>
         </form>
 
-        {state === "Sign Up" ? (
-          <p className="text-gray-400 text-center text-xs mt-2">
-            Already have an account?{" "}
-            <span
-              onClick={() => setState("Login")}
-              className="text-orange-400 cursor-pointer underline"
-            >
-              Login here
-            </span>
-          </p>
-        ) : (
-          <p className="text-gray-400 text-center text-xs mt-2">
-            Don’t have an account?{" "}
-            <span
-              onClick={() => setState("Sign Up")}
-              className="text-orange-400 cursor-pointer underline"
-            >
-              Sign Up
-            </span>
-          </p>
-        )}
+        <p className="login-toggle">
+          {state === "Sign Up" ? (
+            <>
+              Already have an account?{" "}
+              <span onClick={() => setState("Login")} className="login-link">
+                Login here
+              </span>
+            </>
+          ) : (
+            <>
+              Don’t have an account?{" "}
+              <span onClick={() => setState("Sign Up")} className="login-link">
+                Sign Up
+              </span>
+            </>
+          )}
+        </p>
       </div>
     </div>
   );
