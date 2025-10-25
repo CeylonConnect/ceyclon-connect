@@ -18,6 +18,7 @@
   "homepage": "https://github.com/CeylonConnect/ceyclon-connect-api#readme",
   "description": "",
   "dependencies": {
+    "@prisma/client": "^6.18.0",
     "bcryptjs": "^3.0.2",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
@@ -27,6 +28,8 @@
     "pg": "^8.16.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
-  }
+    "nodemon": "^3.1.10",
+    "prisma": "^6.18.0"
+  },
+  "keywords": []
 }
