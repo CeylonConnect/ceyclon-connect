@@ -68,8 +68,5 @@ app.get("/test-db", async (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
-  // Optional: You can keep the initial DB connection test if you like
-  pool.query("SELECT NOW()")
-    .then(res => console.log("✅ Database connected successfully!"))
-    .catch(err => console.error("❌ Database connection failed:", err.message));
+  
 });
