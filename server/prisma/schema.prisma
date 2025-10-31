@@ -28,11 +28,28 @@ model User {
   id_document_url  String?   // optional
   created_at       DateTime  @default(now())
   updated_at       DateTime  @updatedAt
+  reviews         Review[]
 }
+model Hotel {
+  hotel_id       Int      @id @default(autoincrement())
+  hotel_name     String
+  hotel_location String
+  hotel_description String
+  created_at     DateTime @default(now())
+  reviews        Review[]
+  
+}
+model Review {
+  review_id      Int      @id @default(autoincrement())
+  user_id        Int
+  hotel_id       Int
+  rating         Int
+  review_text    String 
+  likes_count    Int      @default(0)
+  dislikes_count Int      @default(0)
+  created_at     DateTime @default(now())
 
-
-
-
-
-
+  user           User     @relation(fields: [user_id], references: [user_id])
+  hotel          Hotel    @relation(fields: [hotel_id], references: [hotel_id])
+}
 
