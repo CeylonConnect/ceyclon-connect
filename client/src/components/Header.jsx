@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 
-export default function Header({ hidden }) {
+export default function Header({ hidden, hideNavLinks = false, middleContent = null }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const navigate = useNavigate();
 
@@ -45,19 +45,27 @@ export default function Header({ hidden }) {
             <span className="logo-text">CeylonConnect</span>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="nav-desktop">
-            {navLinks.map(link => (
-              <a
-                key={link.id}
-                href={link.id}
-                className="nav-link"
-                onClick={(e) => scrollToSection(e, link.id)}
-              >
-                {link.name}
-              </a>
-            ))}
-          </nav>
+          {/* Desktop Navigation or custom middle content (for specific pages) */}
+          {hideNavLinks ? (
+            middleContent ? (
+              <div className="nav-desktop">
+                {middleContent}
+              </div>
+            ) : null
+          ) : (
+            <nav className="nav-desktop">
+              {navLinks.map(link => (
+                <a
+                  key={link.id}
+                  href={link.id}
+                  className="nav-link"
+                  onClick={(e) => scrollToSection(e, link.id)}
+                >
+                  {link.name}
+                </a>
+              ))}
+            </nav>
+          )}
 
           {/* Header Actions */}
           <div className="header-actions">
@@ -90,7 +98,7 @@ export default function Header({ hidden }) {
         {/* Mobile Navigation */}
         <div className={`mobile-menu ${menuOpen ? '' : 'hidden'}`}>
           <nav className="mobile-nav">
-            {navLinks.map(link => (
+            {!hideNavLinks && navLinks.map(link => (
               <a
                 key={link.id}
                 href={link.id}
