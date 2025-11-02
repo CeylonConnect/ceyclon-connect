@@ -3,9 +3,15 @@ import { useNavigate } from 'react-router-dom'
 
 // Single Tour Card component
 function TourCard({ tour }) {
+  const navigate = useNavigate()
   // Handle booking button
-  const onBook = () => {
+  const onBook = (e) => {
+    e.stopPropagation()
     alert(`Booking initiated for: ${tour.title}\nPrice: ${tour.price}\n\nYou will be redirected to the booking page.`)
+  }
+
+  const onCardClick = () => {
+    navigate(`/tours/${tour.id}`)
   }
 
   // Animate tour cards when they appear in viewport
@@ -29,7 +35,7 @@ function TourCard({ tour }) {
   }, [tour.id])
 
   return (
-    <div id={`tour-${tour.id}`} className="tour-card">
+    <div id={`tour-${tour.id}`} className="tour-card" onClick={onCardClick} style={{ cursor: 'pointer' }}>
       {/* Tour Image */}
       <div className="tour-image-container">
         <img src={tour.image} alt={tour.title} className="tour-image" />
