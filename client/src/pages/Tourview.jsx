@@ -4,6 +4,7 @@ import Header from "../components/Header.jsx"
 import Footer from "../components/Footer.jsx"
 import { fetchTours } from "../services/api.js"
 import '../style.css'
+import '../styles/tourview.css'
 
 export default function TourView() {
   const { id } = useParams()
@@ -49,10 +50,16 @@ export default function TourView() {
       <>
         <Header hideNavLinks middleContent={middle} />
         <main>
-          <div className="container" style={{ paddingTop: '5rem', paddingBottom: '4rem', textAlign: 'center' }}>
-            <p>We couldn't find this tour.</p>
-            <button className="btn btn-outline" onClick={() => navigate('/tours')}>Back to all tours</button>
-          </div>
+          <section className="tour-view">
+            <div className="container" style={{ paddingTop: '5rem', paddingBottom: '4rem' }}>
+              <div className="not-found">
+                <p>We couldn't find this tour.</p>
+                <button className="btn btn-outline" onClick={() => navigate('/tours')}>
+                  Back to all tours
+                </button>
+              </div>
+            </div>
+          </section>
         </main>
         <Footer />
       </>
@@ -66,38 +73,38 @@ export default function TourView() {
         <section className="tour-view">
           <div className="container" style={{ paddingTop: '5rem', paddingBottom: '4rem' }}>
             {loading ? (
-              <p style={{ textAlign: 'center' }}>Loading tour…</p>
+              <div className="loading-state">
+                <p>Loading tour…</p>
+              </div>
             ) : (
               tour && (
                 <div className="tour-view-grid">
                   {/* Image */}
                   <div className="tour-view-image">
-                    <img src={tour.image} alt={tour.title} style={{ width: '100%', borderRadius: 12, objectFit: 'cover' }} />
-                    <div className="tour-category badge">{tour.category}</div>
+                    <img src={tour.image} alt={tour.title} />
+                    <div className="badge">{tour.category}</div>
                   </div>
 
                   {/* Content */}
                   <div className="tour-view-content">
-                    <h1 className="tour-title" style={{ marginTop: 0 }}>{tour.title}</h1>
+                    <h1 className="tour-title">{tour.title}</h1>
 
-                    <div className="tour-meta" style={{ display: 'flex', flexWrap: 'wrap', gap: 16, color: 'var(--muted-foreground, #64748b)' }}>
+                    <div className="tour-meta">
                       <span>📍 {tour.location}</span>
                       <span>⏱️ {tour.duration}</span>
                       <span>👥 {tour.capacity}</span>
                       <span>⭐ {tour.rating} ({tour.reviews} reviews)</span>
                     </div>
 
-                    <div className="tour-price" style={{ margin: '12px 0', fontSize: 24, fontWeight: 600 }}>
-                      {tour.price}
-                    </div>
+                    <div className="tour-price">{tour.price}</div>
 
-                    <p className="tour-description" style={{ lineHeight: 1.7 }}>{tour.description}</p>
+                    <p className="tour-description">{tour.description}</p>
 
-                    <div className="tour-guide" style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 16 }}>
-                      <div className="guide-avatar" style={{ width: 36, height: 36, borderRadius: '50%', background: '#eef', display: 'grid', placeItems: 'center', fontWeight: 600 }}>
+                    <div className="tour-guide">
+                      <div className="guide-avatar">
                         {tour.guide?.initials}
                       </div>
-                      <div className="guide-info" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <div className="guide-info">
                         <span>{tour.guide?.name}</span>
                         <svg
                           className="verified-badge"
@@ -114,9 +121,13 @@ export default function TourView() {
                       </div>
                     </div>
 
-                    <div className="tour-cta" style={{ display: 'flex', gap: 12, marginTop: 24 }}>
-                      <button className="btn btn-hero" onClick={() => alert('Booking flow goes here')}>Book Now</button>
-                      <button className="btn btn-outline" onClick={() => navigate('/tours')}>See all tours</button>
+                    <div className="tour-cta">
+                      <button className="btn btn-hero" onClick={() => alert('Booking flow goes here')}>
+                        Book Now
+                      </button>
+                      <button className="btn btn-outline" onClick={() => navigate('/tours')}>
+                        See all tours
+                      </button>
                     </div>
                   </div>
                 </div>
