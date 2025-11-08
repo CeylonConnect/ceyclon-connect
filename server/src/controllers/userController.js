@@ -57,3 +57,14 @@ export const getUserById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Update
+export const updateUser = async (req, res) => {
+  try {
+    const user = await User.update(req.params.id, req.body);
+    res.json({ message: "Profile updated", user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
