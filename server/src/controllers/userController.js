@@ -36,3 +36,13 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Get All
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.getAllUsers(req.query.role);
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
