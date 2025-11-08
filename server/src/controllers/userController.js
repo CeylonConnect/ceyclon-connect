@@ -19,3 +19,41 @@ export const registerUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Login
+export const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findByEmail(email);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const isMatch = await bcrypt.compare(password, user.password_hash);
+    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+
+    const token = generateToken(user);
+    res.json({ token, user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get All
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.getAllUsers(req.query.role);
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get by ID
+export const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
