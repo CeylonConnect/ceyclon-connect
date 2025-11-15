@@ -18,3 +18,20 @@ export const getAllTours = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch tours" });
   }
 };
+
+export const getTourById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tour = await Tour.findById(id);
+
+    if (!tour) {
+      return res.status(404).json({ error: "Tour not found" });
+    }
+
+    res.json(tour);
+  } catch (error) {
+    console.error("Error in getTourById:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
