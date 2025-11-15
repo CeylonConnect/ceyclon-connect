@@ -18,3 +18,34 @@ export const getAllTours = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch tours" });
   }
 };
+export const getToursByProvider = async (req, res) => {
+  try {
+    const tours = await Tour.getByProvider(req.params.providerId);
+    res.json(tours);
+  } catch (error) {
+    console.error("Error fetching provider tours:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const updateTour = async (req, res) => {
+  try {
+    const tour = await Tour.update(req.params.id, req.body);
+    res.json({ message: "Tour updated", tour });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const deleteTour = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedTour = await Tour.delete(id);
+
+    if (!deletedTour) return res.status(404).json({ error: "Tour not found" });
+    res.status(200).json({ message: "Tour deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting tour:", error);
+    res.status(500).json({ error: "Failed to delete tour" });
+  }
+};
