@@ -35,3 +35,22 @@ export const getTourById = async (req, res) => {
   }
 };
 
+export const getToursByProvider = async (req, res) => {
+  try {
+    const tours = await Tour.getByProvider(req.params.providerId);
+    res.json(tours);
+  } catch (error) {
+    console.error("Error fetching provider tours:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const updateTour = async (req, res) => {
+  try {
+    const tour = await Tour.update(req.params.id, req.body);
+    res.json({ message: "Tour updated", tour });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
