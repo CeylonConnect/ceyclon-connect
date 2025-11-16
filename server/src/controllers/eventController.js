@@ -38,3 +38,13 @@ export const updateEvent = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const deleteEvent = async (req, res) => {
+  try {
+    const event = await Event.delete(req.params.id);
+    res.json({ message: "Event deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
