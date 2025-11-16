@@ -23,3 +23,15 @@ export const getBookingStats = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Get popular tours by bookings
+export const getPopularTours = async (req, res) => {
+  try {
+    const { limit } = req.query; // optional query param
+    const tours = await Admin.getPopularTours(limit || 10);
+    res.json(tours);
+  } catch (error) {
+    console.error("Error getting popular tours:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
