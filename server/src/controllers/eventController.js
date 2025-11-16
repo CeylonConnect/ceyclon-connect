@@ -27,3 +27,14 @@ export const getAllEvents = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const updateEvent = async (req, res) => {
+  try {
+    const event = await Event.update(req.params.id, req.body);
+    res.json({
+      message: "Event updated successfully", event: event
+  });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
