@@ -18,3 +18,12 @@ export const getEventById = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const getAllEvents = async (req, res) => {
+  try {
+    const events = await Event.getAll();
+    res.json(events);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
