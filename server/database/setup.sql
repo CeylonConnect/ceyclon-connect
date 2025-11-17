@@ -112,7 +112,8 @@ CREATE TABLE IF NOT EXISTS hotels (
     hotel_name VARCHAR(255) NOT NULL,
     hotel_location VARCHAR(255) NOT NULL,
     hotel_description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Insert sample data
