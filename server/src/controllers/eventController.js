@@ -41,7 +41,7 @@ export const updateEvent = async (req, res) => {
 
 export const deleteEvent = async (req, res) => {
   try {
-    const event = await Event.delete(req.params.id);
+    await Event.delete(req.params.id);
     res.json({ message: "Event deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
