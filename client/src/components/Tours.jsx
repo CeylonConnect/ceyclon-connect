@@ -1,10 +1,17 @@
 import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 // Single Tour Card component
 function TourCard({ tour }) {
+  const navigate = useNavigate()
   // Handle booking button
-  const onBook = () => {
+  const onBook = (e) => {
+    e.stopPropagation()
     alert(`Booking initiated for: ${tour.title}\nPrice: ${tour.price}\n\nYou will be redirected to the booking page.`)
+  }
+
+  const onCardClick = () => {
+    navigate(`/tours/${tour.id}`)
   }
 
   // Animate tour cards when they appear in viewport
@@ -28,7 +35,7 @@ function TourCard({ tour }) {
   }, [tour.id])
 
   return (
-    <div id={`tour-${tour.id}`} className="tour-card">
+    <div id={`tour-${tour.id}`} className="tour-card" onClick={onCardClick} style={{ cursor: 'pointer' }}>
       {/* Tour Image */}
       <div className="tour-image-container">
         <img src={tour.image} alt={tour.title} className="tour-image" />
@@ -126,14 +133,15 @@ function TourCard({ tour }) {
 }
 
 // All Tours Section
-export default function Tours({ tours, loading }) {
+export default function Tours({ tours, loading, title = 'Popular', showViewAll = true }) {
+  const navigate = useNavigate()
   return (
     <section className="tours">
       <div className="container">
         {/* Section Header */}
         <div className="section-header">
           <h2 className="section-title">
-            Popular <span className="gradient-text">Tours</span>
+            {title} <span className="gradient-text">Tours</span>
           </h2>
           <p className="section-subtitle">
             Discover our most loved experiences handpicked by travelers and curated by trusted local guides.
@@ -152,16 +160,16 @@ export default function Tours({ tours, loading }) {
         )}
 
         {/* Section Footer */}
-        <div className="section-footer">
-          <button
-            className="btn btn-outline btn-lg"
-            onClick={() =>
-              alert('Redirecting to all tours page...\n\nExplore our complete collection of tours!')
-            }
-          >
-            View All Tours
-          </button>
-        </div>
+        {showViewAll && (
+          <div className="section-footer">
+            <button
+              className="btn btn-outline btn-lg"
+              onClick={() => navigate('/tours')}
+            >
+              View All Tours
+            </button>
+          </div>
+        )}
       </div>
     </section>
   )

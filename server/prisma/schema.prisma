@@ -30,6 +30,7 @@ model User {
   updated_at       DateTime  @updatedAt
   reviews         Review[]
 }
+
 model Hotel {
   hotel_id       Int      @id @default(autoincrement())
   hotel_name     String

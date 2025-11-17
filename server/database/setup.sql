@@ -40,19 +40,11 @@ CREATE TABLE IF NOT EXISTS bookings (
     tourist_id INTEGER REFERENCES users(user_id),
     tour_id INTEGER REFERENCES tours(tour_id),
     booking_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    tour_date DATE NOT NULL,
-    group_size INTEGER NOT NULL,
-    total_amount DECIMAL(10,2) NOT NULL,
-    status VARCHAR(20) CHECK (status IN ('pending', 'confirmed', 'cancelled', 'completed')) DEFAULT 'pending',
-    special_requests TEXT,
-    payment_status VARCHAR(20) DEFAULT 'pending',
-    payment_intent_id VARCHAR(255)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS reviews (
-    review_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL,
-    entity_id UUID NOT NULL,
+CREATE TABLE IF NOT EXISTS reviews (    
     entity_type VARCHAR(50) NOT NULL CHECK (entity_type IN ('hotel', 'place', 'guide')),
     rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
     review_text TEXT NOT NULL,
@@ -114,6 +106,7 @@ CREATE TABLE IF NOT EXISTS hotels (
     hotel_description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 
 -- Insert sample data
