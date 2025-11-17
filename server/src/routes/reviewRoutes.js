@@ -1,31 +1,18 @@
-const express = require("express");
+import express from "express";
+import {createReview, getReviewsByTour, getReviewsByGuide,
+  getAverageRating,}from "../controllers/reviewController.js";
 const router = express.Router();
 
-// Temporary in-memory review storage
-let reviews = [];
+//  Create a new review
+router.post("/", createReview);
 
-// GET all reviews
-router.get("/", (req, res) => {
-  res.json(reviews);
-});
+//  Get all reviews for a specific tour
+router.get("/tour/:tourId", getReviewsByTour);
 
-// POST a new review
-router.post("/", (req, res) => {
-  const { user, comment, rating } = req.body;
-  if (!user || !comment || !rating) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
+//  Get all reviews for a specific guide
+router.get("/guide/:guideId", getReviewsByGuide);
 
-  const newReview = {
-    id: reviews.length + 1,
-    user,
-    comment,
-    rating,
-    date: new Date()
-  };
+//  Get average rating for a specific tour
+router.get("/tour/:tourId/average", getAverageRating);
 
-  reviews.push(newReview);
-  res.status(201).json(newReview);
-});
-
-module.exports = router;
+export default router;
