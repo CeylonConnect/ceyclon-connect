@@ -10,7 +10,7 @@ const reviewRoutes = require('./src/routes/reviewRoutes');
 
 const app = express();
 
-// --- Middleware Setup ---
+
 
 // 1. CORS Configuration: Explicitly allow requests from your frontend
 const corsOptions = {
