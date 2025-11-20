@@ -18,3 +18,21 @@ export default function AdminDashboard() {
     { value: "disputes", label: "Disputes" },
     { value: "events", label: "Events" },
   ];
+
+ return (
+    <main className="min-h-screen bg-sand-50">
+      <AdminTopbar />
+      <StatsHeader />
+
+      <section className="mx-auto mt-6 max-w-7xl px-4">
+        <Tabs value={tab} onChange={setTab} items={items} />
+
+        {tab === "users" && <UsersPanel />}
+        {tab === "tours" && <ToursPanel />}
+        {tab === "badge" && <BadgeRequestsPanel />}
+        {tab === "disputes" && <DisputesPanel />}
+        {tab === "events" && <EventsPanel />}
+      </section>
+    </main>
+  );
+}
