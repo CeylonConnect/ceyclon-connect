@@ -27,3 +27,18 @@ export default function LoginPage() {
       navigate(dest, { replace: true });
       return;
     }
+
+     // If a token exists, try to route based on stored user role
+    const token =
+      localStorage.getItem("token") || localStorage.getItem("access_token");
+    if (token) {
+      try {
+        const raw = localStorage.getItem("user");
+        const role = raw ? JSON.parse(raw)?.role?.toLowerCase?.() : undefined;
+        const dest = next || routeForRole(role);
+        navigate(dest, { replace: true });
+      } catch {
+        navigate(next || "/dashboard", { replace: true });
+      }
+    }
+  }, [authUser, next, navigate]);
