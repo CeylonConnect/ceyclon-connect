@@ -42,3 +42,14 @@ export default function LoginPage() {
       }
     }
   }, [authUser, next, navigate]);
+
+ const handleChange = (e) =>
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+
+  function validate() {
+    const nextErr = {};
+    if (!/^[^@]+@[^@]+\.[^@]+$/.test(form.email))
+      nextErr.email = "Valid email required";
+    if (form.password.length < 6) nextErr.password = "Min 6 characters";
+    return nextErr;
+  }
