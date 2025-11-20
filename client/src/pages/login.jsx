@@ -16,3 +16,14 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
+ // If user already logged in, bounce away from /login (role-aware)
+  useEffect(() => {
+    const routeForRole = (role) =>
+      role === "local" || role === "guide" ? "/local" : "/dashboard";
+
+    if (authUser) {
+      const role = authUser.role?.toLowerCase?.();
+      const dest = next || routeForRole(role);
+      navigate(dest, { replace: true });
+      return;
+    }
