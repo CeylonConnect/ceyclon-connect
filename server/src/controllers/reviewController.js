@@ -49,3 +49,26 @@ export const getAverageRating = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch average rating" });
   }
 };
+
+//  Get average rating for a guide
+export const getGuideAverageRating = async (req, res) => {
+  try {
+    const { guideId } = req.params;
+    const stats = await Review.getGuideAverageRating(guideId);
+    res.status(200).json(stats);
+  } catch (error) {
+    console.error("Error fetching guide average rating:", error);
+    res.status(500).json({ error: "Failed to fetch guide rating" });
+  }
+};
+
+//  Get platform-wide review statistics (Admin use)
+export const getReviewStats = async (req, res) => {
+  try {
+    const stats = await Review.getReviewStats();
+    res.status(200).json(stats);
+  } catch (error) {
+    console.error("Error fetching review stats:", error);
+    res.status(500).json({ error: "Failed to fetch review statistics" });
+  }
+};
