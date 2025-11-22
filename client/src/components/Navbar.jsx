@@ -2,6 +2,56 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../state/AuthContext";
 import { useNavigate } from "react-router-dom";
 
+const NavLink = ({ children, href = "#" }) => (
+  <a
+    href={href}
+    className="px-3 py-2 text-[15px] font-medium text-neutral-700 hover:text-neutral-900 transition-colors"
+  >
+    {children}
+  </a>
+);
+
+export default function Navbar({
+  onLoginClick,
+  onSignupClick,
+  onDashboardClick,
+}) {
+  const [open, setOpen] = useState(false);
+  const [elevated, setElevated] = useState(false);
+  const { user, logout } = useAuth();
+  const isAuthenticated = !!user;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const onScroll = () => setElevated(window.scrollY > 6);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const onLogoutClick = () => {
+    logout();
+  };
+
+  const handleLogin = () => {
+    if (onLoginClick) return onLoginClick();
+    navigate("/login");
+  };
+
+  const handleSignup = () => {
+    if (onSignupClick) return onSignupClick();
+    navigate("/signup");
+  };
+
+  const handleDashboard = () => {
+    if (onDashboardClick) return onDashboardClick();
+    const dest =
+      user && (user.role === "local" || user.role === "guide")
+        ? "/local"
+        : "/dashboard";
+    navigate(dest);
+  };
+
 return (
     <header
       className={`sticky top-0 z-50 w-full ${
