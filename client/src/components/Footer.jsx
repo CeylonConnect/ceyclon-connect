@@ -100,3 +100,105 @@ bg-clip-text text-transparent"
               </SocialIcon>
             </div>
           </div>
+
+          {/* Explore */}
+          <div>
+            <h4 className="text-lg font-semibold text-neutral-800">Explore</h4>
+            <ul className="mt-5 space-y-3">
+              <li>
+                <FooterLink href="/tours">Browse Tours</FooterLink>
+              </li>
+              <li>
+                <FooterLink href="/events">Upcoming Events</FooterLink>
+              </li>
+              <li>
+                <FooterLink href="/guides">Find Guides</FooterLink>
+              </li>
+              <li>
+                <FooterLink href="/destinations">Destinations</FooterLink>
+              </li>
+            </ul>
+          </div>
+
+          {/* For Guides */}
+          <div>
+            <h4 className="text-lg font-semibold text-neutral-800">
+              For Guides
+            </h4>
+            <ul className="mt-5 space-y-3">
+              <li>
+                <FooterLink href="/become-a-guide">Become a Guide</FooterLink>
+              </li>
+              <li>
+                <FooterLink href="/guide-resources">Resources</FooterLink>
+              </li>
+              <li>
+                <FooterLink href="/verify">Get Verified</FooterLink>
+              </li>
+              <li>
+                <FooterLink href="/community">Community</FooterLink>
+              </li>
+            </ul>
+          </div>
+
+          {/* Support */}
+          <div>
+            <h4 className="text-lg font-semibold text-neutral-800">Support</h4>
+            <ul className="mt-5 space-y-3">
+              <li>
+                <FooterLink href="mailto:support@ceylonconnect.lk" external>
+                  <span className="mr-2 inline-flex">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M4 4h16v16H4V4Zm0 0 8 8 8-8"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  support@ceylonconnect.lk
+                </FooterLink>
+              </li>
+              <li>
+                <FooterLink href="tel:+94112345678" external>
+                  <span className="mr-2 inline-flex">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M6.5 3h-2A1.5 1.5 0 0 0 3 4.5 16.5 16.5 0 0 0 19.5 21 1.5 1.5 0 0 0 21 19.5v-2a1.5 1.5 0 0 0-1.5-1.5c-.9 0-1.8-.15-2.6-.45a1.5 1.5 0 0 0-1.46.33l-1.73 1.43a14 14 0 0 1-6.43-6.43l1.43-1.73a1.5 1.5 0 0 0 .33-1.46 8.5 8.5 0 0 1-.45-2.6A1.5 1.5 0 0 0 6.5 3Z"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </span>
+                  +94 764630969
+                </FooterLink>
+              </li>
+              <li>
+                <FooterLink href="/help">Help Center</FooterLink>
+              </li>
+              <li>
+                <FooterLink href="/safety">Safety</FooterLink>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <hr className="my-10 border-neutral-200" />
+
+        <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
+          <div className="text-sm text-neutral-600">
+            © {year} CeylonConnect. All rights reserved.
+          </div>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+            <FooterLink href="/privacy">Privacy Policy</FooterLink>
+            <FooterLink href="/terms">Terms of Service</FooterLink>
+            <FooterLink href="/cookies">Cookie Policy</FooterLink>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
