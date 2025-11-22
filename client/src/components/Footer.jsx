@@ -25,3 +25,15 @@ function FooterLink({ href = "#", children, external = false }) {
   );
 }
 
+function SocialIcon({ href, label, children }) {
+  return (
+    <a
+      href={href}
+      aria-label={label}
+      className="group inline-flex h-9 w-9 items-center justify-center rounded-md text-neutral-600 
+                 transition-transform duration-300 transform hover:scale-150 hover:text-orange-600"
+    >
+      <span className="relative">{children}</span>
+    </a>
+  );
+}
