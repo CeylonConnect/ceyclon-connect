@@ -127,3 +127,94 @@ function EventCard({ event }) {
     </article>
   );
 }
+
+function Pagination({ total, perPage, page, onChange }) {
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
+  if (totalPages <= 1) return null;
+  const go = (p) => onChange(Math.min(Math.max(1, p), totalPages));
+  return (
+    <div className="mt-10 flex items-center justify-center gap-2">
+      <button
+        onClick={() => go(page - 1)}
+        disabled={page === 1}
+        className={`rounded-lg border px-3 py-1.5 text-sm font-medium ${
+          page === 1
+            ? "cursor-not-allowed border-neutral-200 text-neutral-400"
+            : "border-neutral-200 text-neutral-700 hover:bg-neutral-50"
+        }`}
+      >
+        Prev
+      </button>
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+        <button
+          key={p}
+          onClick={() => go(p)}
+          className={`h-9 min-w-9 rounded-lg px-3 text-sm font-semibold ${
+            p === page
+              ? "bg-neutral-900 text-white"
+              : "text-neutral-700 hover:bg-neutral-100"
+          }`}
+        >
+          {p}
+        </button>
+      ))}
+      <button
+        onClick={() => go(page + 1)}
+        disabled={page === totalPages}
+        className={`rounded-lg border px-3 py-1.5 text-sm font-medium ${
+          page === totalPages
+            ? "cursor-not-allowed border-neutral-200 text-neutral-400"
+            : "border-neutral-200 text-neutral-700 hover:bg-neutral-50"
+        }`}
+      >
+        Next
+      </button>
+    </div>
+  );
+}
+
+export default function UpcomingEvents({
+  items = EVENTS_MOCK,
+  showPagination = true,
+  itemsPerPage = 2,
+  limit = 2,
+  showFilters, // optional override
+}) {
+  const [page, setPage] = useState(1);
+  const [filters, setFilters] = useState({ query: "", district: "" });
+
+  // default behavior: show filters on full events page, hide on home widgets
+  const shouldShowFilters =
+    typeof showFilters === "boolean" ? showFilters : showPagination;
+
+  // derive district options from data
+  const districts = useMemo(
+    () =>
+      Array.from(new Set(items.map((e) => e.location).filter(Boolean))).sort(),
+    [items]
+  );
+
+  // apply filters
+  const filtered = useMemo(() => {
+    const q = filters.query.trim().toLowerCase();
+    return items
+      .filter((e) =>
+        q
+          ? e.title.toLowerCase().includes(q) ||
+            (e.description || "").toLowerCase().includes(q)
+          : true
+      )
+      .filter((e) => (filters.district ? e.location === filters.district : true));
+  }, [items, filters]);
+
+  // reset to first page when filters change
+  useEffect(() => {
+    setPage(1);
+  }, [filters.query, filters.district]);
+
+  // paginate or limit
+  const visible = useMemo(() => {
+    if (!showPagination) return filtered.slice(0, limit);
+    const start = (page - 1) * itemsPerPage;
+    return filtered.slice(start, start + itemsPerPage);
+  }, [filtered, page, itemsPerPage, showPagination, limit]);
