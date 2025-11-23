@@ -106,3 +106,90 @@ export default function About() {
           </Reveal>
         </div>
       </section>
+
+      
+      {/* Mission + Stats */}
+      <section className="relative bg-[linear-gradient(180deg,#fff,rgba(255,250,240,.6))]">
+        <div className="mx-auto max-w-6xl px-4 py-16">
+          <Reveal>
+            <SectionTitle
+              eyebrow="Our Mission"
+              title="Empowering local guides. Enriching traveler journeys."
+              subtitle="We believe the most memorable trips are led by people who call the destination home. Our platform helps you meet verified local experts, customize experiences, and travel responsibly."
+            />
+          </Reveal>
+
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <Reveal>
+              <Stat value="2,500+" label="Happy travelers" />
+            </Reveal>
+            <Reveal>
+              <Stat value="450+" label="Verified guides" />
+            </Reveal>
+            <Reveal>
+              <Stat value="120+" label="Destinations covered" />
+            </Reveal>
+            <Reveal>
+              <Stat value="4.8/5" label="Average tour rating" />
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Story timeline */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-16">
+          <Reveal>
+            <SectionTitle
+              eyebrow="Our Story"
+              title="From a simple idea to a vibrant community"
+              subtitle="CeylonConnect started with a small group of guides who wanted to share authentic stories. Today, we’re a growing community building meaningful connections."
+            />
+          </Reveal>
+
+          <div className="mt-10 relative">
+            <div className="absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-neutral-200 md:block" />
+            <div className="space-y-8">
+              {[
+                {
+                  year: "2025",
+                  title: "Project Idea Born",
+                  text: "Our team identified the need for a digital platform to promote clean environments across Sri Lanka and improve community awareness.",
+                },
+                {
+                  year: "2025",
+                  title: "Team Formation",
+                  text: "We formed our mini-project team, gathered requirements, and started planning core features such as event updates, user login, and community support.",
+                },
+                {
+                  year: "2025",
+                  title: "Prototype & Development",
+                  text: "We designed the UI, built the frontend using React, and developed the backend system to manage events, sponsors, and user interactions.",
+                },
+              ].map((it, idx) => (
+                <Reveal
+                  key={it.year}
+                  className={`relative rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm md:w-[calc(50%-1rem)] ${
+                    idx % 2 === 0 ? "md:ml-auto" : "md:mr-auto"
+                  }`}
+                >
+                  <div className="text-xs font-semibold text-orange-600">
+                    {it.year}
+                  </div>
+                  <div className="mt-1 text-lg font-semibold text-neutral-800">
+                    {it.title}
+                  </div>
+                  <p className="mt-2 text-sm text-neutral-600">{it.text}</p>
+
+                  {/* Connector dot for md+ */}
+                  <div
+                    className={`hidden md:block absolute top-6 h-3 w-3 rounded-full bg-gradient-to-br from-orange-500 to-teal-500 ring-4 ring-white ${
+                      idx % 2 === 0 ? "-left-1.5" : "-right-1.5"
+                    }`}
+                  />
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
