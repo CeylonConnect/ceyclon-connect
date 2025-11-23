@@ -19,3 +19,21 @@ function Hero() {
   );
 }
 
+export default function EventsPage() {
+  return (
+    <>
+      <Navbar
+        isAuthenticated={false}
+        onLoginClick={() => (window.location.href = "/login")}
+        onSignupClick={() => (window.location.href = "/signup")}
+        onDashboardClick={() => (window.location.href = "/dashboard")}
+      />
+      <main>
+        <Hero />
+        {/* Full events listing with pagination and images */}
+        <UpcomingEvents showPagination itemsPerPage={2} />
+      </main>
+      <Footer />
+    </>
+  );
+}
