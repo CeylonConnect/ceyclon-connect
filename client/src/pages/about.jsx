@@ -193,3 +193,125 @@ export default function About() {
           </div>
         </div>
       </section>
+
+        {/* Values */}
+      <section className="bg-[linear-gradient(180deg,rgba(255,250,240,.6),#fff)]">
+        <div className="mx-auto max-w-6xl px-4 py-16">
+          <Reveal>
+            <SectionTitle
+              eyebrow="Our Values"
+              title="What we stand for"
+              subtitle="The principles guiding every experience on CeylonConnect."
+            />
+          </Reveal>
+
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <Reveal>
+              <ValueCard
+                title="Authenticity"
+                desc="Real stories, real locals, real culture — beyond generic itineraries."
+                icon={
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="m12 17.3 6.2 3.7-1.6-7 5-4.7-7.1-.6L12 2 9.5 8.7 2.4 9.3l5 4.7-1.6 7z" />
+                  </svg>
+                }
+              />
+            </Reveal>
+            <Reveal>
+              <ValueCard
+                title="Safety"
+                desc="Guide verification, secure payments, and responsive support."
+                icon={
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M12 2 4 6v6c0 5 8 10 8 10s8-5 8-10V6l-8-4Zm-1 13-3-3 1.4-1.4L11 12.2l4.6-4.6L17 9l-6 6Z" />
+                  </svg>
+                }
+              />
+            </Reveal>
+            <Reveal>
+              <ValueCard
+                title="Community"
+                desc="Travel that supports local livelihoods and preserves heritage."
+                icon={
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M9 10a3 3 0 1 1 6 0M3 20a6 6 0 0 1 6-6h6a6 6 0 0 1 6 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                }
+              />
+            </Reveal>
+            <Reveal>
+              <ValueCard
+                title="Sustainability"
+                desc="Respecting nature and culture through responsible practices creating a cleaner tomorrow."
+                icon={
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M12 22s8-6.5 8-13A8 8 0 1 0 4 9c0 6.5 8 13 8 13Z"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                    <circle
+                      cx="12"
+                      cy="9"
+                      r="3"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                  </svg>
+                }
+              />
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="relative isolate">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#e86d39] via-[#d88a3f] to-[#179c93]" />
+        <div className="mx-auto max-w-6xl px-4 py-16 text-center text-white sm:py-20">
+          <Reveal>
+            <h2 className="text-3xl font-extrabold sm:text-4xl">
+              Ready to explore with locals?
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-white/95">
+              Discover curated experiences or become a guide and share your Sri
+              Lankan story.
+            </p>
+          </Reveal>
+
+          <Reveal className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a
+              href="/tours"
+              className="inline-flex items-center justify-center rounded-xl bg-white/95 px-6 py-3 text-base font-semibold text-neutral-800 shadow-md transition hover:bg-white hover:shadow-lg"
+            >
+              Explore Tours
+            </a>
+            <a
+              href="/signup"
+              className="relative inline-flex h-12 items-center justify-center overflow-hidden rounded-xl bg-white/10 px-6 text-base font-semibold text-white ring-1 ring-white/30 transition hover:bg-white/20"
+            >
+              <span className="relative z-10">Get Started</span>
+              <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-0 transition duration-500 ease-out hover:translate-x-full hover:opacity-100" />
+            </a>
+          </Reveal>
+        </div>
+      </section>
+      <Footer />
+    </>
+  );
+}
