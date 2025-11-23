@@ -40,23 +40,18 @@ CREATE TABLE IF NOT EXISTS bookings (
     tourist_id INTEGER REFERENCES users(user_id),
     tour_id INTEGER REFERENCES tours(tour_id),
     booking_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    tour_date DATE NOT NULL,
-    group_size INTEGER NOT NULL,
-    total_amount DECIMAL(10,2) NOT NULL,
-    status VARCHAR(20) CHECK (status IN ('pending', 'confirmed', 'cancelled', 'completed')) DEFAULT 'pending',
-    special_requests TEXT,
-    payment_status VARCHAR(20) DEFAULT 'pending',
-    payment_intent_id VARCHAR(255)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS reviews (
-    review_id SERIAL PRIMARY KEY,
-    booking_id INTEGER REFERENCES bookings(booking_id),
-    tourist_id INTEGER REFERENCES users(user_id),
-    tour_id INTEGER REFERENCES tours(tour_id),
-    rating INTEGER CHECK (rating >= 1 AND rating <= 5) NOT NULL,
-    comment TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS reviews (    
+    entity_type VARCHAR(50) NOT NULL CHECK (entity_type IN ('hotel', 'place', 'guide')),
+    rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    review_text TEXT NOT NULL,
+    likes_count INTEGER DEFAULT 0,
+    dislikes_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS messages (
@@ -103,6 +98,16 @@ CREATE TABLE IF NOT EXISTS events (
     image_url VARCHAR(500),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS hotels (
+    hotel_id SERIAL PRIMARY KEY,
+    hotel_name VARCHAR(255) NOT NULL,
+    hotel_location VARCHAR(255) NOT NULL,
+    hotel_description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
 
 -- Insert sample data
 INSERT INTO users (email, password_hash, first_name, last_name, phone, role, badge_status) VALUES

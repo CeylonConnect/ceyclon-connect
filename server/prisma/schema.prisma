@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id          Int       @id @default(autoincrement())
+  email            String    @unique
+  password_hash    String
+  first_name       String
+  last_name        String
+  phone            String?   // optional
+  role             String      @default("tourist")
+  profile_picture  String?   // optional
+  is_verified      Boolean   @default(false)
+  badge_status     String?   @default("none")
+  id_document_url  String?   // optional
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+  reviews         Review[]
+}
+
+model Hotel {
+  hotel_id       Int      @id @default(autoincrement())
+  hotel_name     String
+  hotel_location String
+  hotel_description String
+  created_at     DateTime @default(now())
+  reviews        Review[]
+  
+}
+model Review {
+  review_id      Int      @id @default(autoincrement())
+  user_id        Int
+  hotel_id       Int
+  rating         Int
+  review_text    String 
+  likes_count    Int      @default(0)
+  dislikes_count Int      @default(0)
+  created_at     DateTime @default(now())
+
+  user           User     @relation(fields: [user_id], references: [user_id])
+  hotel          Hotel    @relation(fields: [hotel_id], references: [hotel_id])
+}
+
