@@ -1,3 +1,5 @@
+// Complete Tour Details
+
 import React, { useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom"; // ensure react-router-dom is installed and configured
 import Navbar from "../components/Navbar";
