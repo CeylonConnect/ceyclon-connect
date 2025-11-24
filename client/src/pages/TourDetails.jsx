@@ -63,3 +63,32 @@ function Hero({ item }) {
     </section>
   );
 }
+
+function Gallery({ main, extras }) {
+  const [active, setActive] = useState(main);
+  const images = useMemo(() => [main, ...extras].filter(Boolean), [main, extras]);
+  return (
+    <section className="mx-auto max-w-6xl px-4 -mt-10 relative">
+      <div className="rounded-2xl overflow-hidden ring-1 ring-black/5 shadow-lg bg-white">
+        <div className="grid gap-2 p-2 sm:grid-cols-3">
+          <div className="sm:col-span-2">
+            <img src={active} alt="Gallery main" className="h-80 w-full rounded-xl object-cover sm:h-[28rem]" />
+          </div>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-1">
+            {images.slice(1, 5).map((src, idx) => (
+              <button
+                key={idx}
+                className={`relative overflow-hidden rounded-xl ring-1 ring-black/5 transition ${active === src ? "outline outline-2 outline-orange-400" : "hover:opacity-90"}`}
+                onClick={() => setActive(src)}
+                aria-label={`Select image ${idx + 1}`}
+              >
+                <img src={src} alt={`Gallery ${idx + 1}`} className="h-36 w-full object-cover sm:h-[6.75rem]" />
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
