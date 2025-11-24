@@ -263,3 +263,45 @@ export default function TourDetails() {
               </div>
             </div>
 
+            <GuideCard guide={item.guide} />
+
+            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+              <h2 className="text-xl font-bold text-neutral-800">FAQs</h2>
+              <FAQAccordion items={faqs} />
+            </div>
+
+            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+              <h2 className="text-xl font-bold text-neutral-800">Traveler reviews</h2>
+              <div className="mt-4 space-y-4">
+                {reviews.map((r) => <ReviewCard key={r.id} review={r} />)}
+              </div>
+            </div>
+          </div>
+
+          {/* Right sidebar */}
+          <aside className="lg:sticky lg:top-20">
+            <TourBookingCard
+              price={item.price}
+              currency={item.currency}
+              title={item.title}
+              rating={item.rating}
+              maxGroup={item.groupSize}
+            />
+          </aside>
+        </div>
+      </section>
+
+      {related.length > 0 && (
+        <FeaturedExperiences
+          items={related}
+          showPagination={false}
+          limit={3}
+          showHeaderAction={false}
+          title="You might also like"
+          subtitle={`More ${item.category.toLowerCase()} experiences`}
+        />
+      )}
+      <Footer />
+    </>
+  );
+}
