@@ -189,3 +189,77 @@ export default function TourDetails() {
   const related = EXPERIENCES_MOCK.filter(
     (x) => x.category === item.category && x.id !== item.id
   );
+
+  return (
+    <>
+      <Navbar
+        isAuthenticated={true}
+        onLoginClick={() => (window.location.href = "/login")}
+        onSignupClick={() => (window.location.href = "/signup")}
+        onDashboardClick={() => (window.location.href = "/dashboard")}
+      />
+      <Breadcrumbs title={item.title} />
+      <Hero item={item} />
+      <Gallery main={gallery[0]} extras={gallery.slice(1)} />
+
+      <section className="mx-auto max-w-6xl px-4 py-10">
+        <div className="grid gap-8 lg:grid-cols-[1fr_370px]">
+          {/* Left column */}
+          <div className="space-y-8">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+              <h2 className="text-xl font-bold text-neutral-800">Overview</h2>
+              <p className="mt-3 text-[15px] leading-relaxed text-neutral-700">{item.excerpt}</p>
+
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                <div className="rounded-xl bg-neutral-50 p-4">
+                  <div className="text-sm text-neutral-500">Duration</div>
+                  <div className="mt-1 font-semibold text-neutral-800">{item.durationHours} hours</div>
+                </div>
+                <div className="rounded-xl bg-neutral-50 p-4">
+                  <div className="text-sm text-neutral-500">Group size</div>
+                  <div className="mt-1 font-semibold text-neutral-800">Up to {item.groupSize} people</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+              <h2 className="text-xl font-bold text-neutral-800">Itinerary</h2>
+              <ol className="mt-4 space-y-4">
+                {itinerary.map((row, idx) => (
+                  <li key={idx} className="flex gap-4">
+                    <div className="mt-1 w-16 shrink-0 text-sm font-semibold text-orange-600">{row.time}</div>
+                    <div className="flex-1 text-[15px] text-neutral-700">{row.text}</div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-neutral-800">What’s included</h3>
+                <ul className="mt-3 space-y-2 text-[15px] text-neutral-700">
+                  {includes.map((v, i) => (
+                    <li key={i} className="flex items-center gap-2">
+                      <span className="text-emerald-500">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>
+                      </span>
+                      {v}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-neutral-800">Not included</h3>
+                <ul className="mt-3 space-y-2 text-[15px] text-neutral-700">
+                  {notIncluded.map((v, i) => (
+                    <li key={i} className="flex items-center gap-2">
+                      <span className="text-rose-500">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.3 5.7 5.7 18.3l1.4 1.4L19.7 7.1l-1.4-1.4Zm0 12.6L7.1 7.1 5.7 5.7 18.3 18.3l1.4-1.4Z"/></svg>
+                      </span>
+                      {v}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
