@@ -91,4 +91,35 @@ function Gallery({ main, extras }) {
     </section>
   );
 }
+function Section({ title, children }) {
+  return (
+    <section className="mx-auto max-w-6xl px-4 py-10">
+      <h2 className="text-xl font-bold text-neutral-800">{title}</h2>
+      <div className="mt-4 text-[15px] leading-relaxed text-neutral-700">
+        {children}
+      </div>
+    </section>
+  );
+}
 
+function GuideCard({ guide }) {
+  return (
+    <div className="flex items-center gap-4 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+      <img src={guide.avatar} alt={guide.name} className="h-14 w-14 rounded-full object-cover" />
+      <div>
+        <div className="flex items-center gap-2">
+          <h4 className="font-semibold text-neutral-800">{guide.name}</h4>
+          {guide.verified && (
+            <span className="text-amber-500" title="Verified">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 3 8v8l9 6 9-6V8l-9-6Zm-1 13-3-3 1.4-1.4L11 12.2l4.6-4.6L17 9l-6 6Z" /></svg>
+            </span>
+          )}
+        </div>
+        <p className="text-sm text-neutral-600">Local guide • 5+ years experience</p>
+      </div>
+      <div className="ml-auto">
+        <Link to="/guides" className="text-sm font-semibold text-orange-600 hover:underline">View profile</Link>
+      </div>
+    </div>
+  );
+}
