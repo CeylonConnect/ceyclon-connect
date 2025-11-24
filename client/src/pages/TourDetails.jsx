@@ -123,3 +123,69 @@ function GuideCard({ guide }) {
     </div>
   );
 }
+
+export default function TourDetails() {
+  const { slug } = useParams(); // expects route: /tours/:slug
+  const item = useMemo(() => EXPERIENCES_MOCK.find((i) => i.slug === slug), [slug]);
+
+  if (!item) {
+    return (
+      <>
+        <Navbar />
+        <div className="mx-auto max-w-3xl px-4 py-24 text-center">
+          <h1 className="text-2xl font-bold text-neutral-800">Tour not found</h1>
+          <p className="mt-2 text-neutral-600">The experience you’re looking for doesn’t exist or was removed.</p>
+          <Link to="/tours" className="mt-6 inline-flex rounded-xl bg-neutral-900 px-4 py-2 text-sm font-semibold text-white hover:opacity-90">
+            Back to all tours
+          </Link>
+        </div>
+      </>
+    );
+  }
+
+  // Build a small gallery if the mock lacks one
+  const gallery = [
+    item.image,
+    "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1400&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1544989164-31dc3c645987?q=80&w=1400&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1590069261209-8b83e1b82588?q=80&w=1400&auto=format&fit=crop",
+  ];
+
+  // Mock itinerary / includes / FAQs / Reviews (replace with backend later)
+  const includes = ["Hotel pickup and drop-off", "Bottled water", "Licensed local guide", "Entrance tickets"];
+  const notIncluded = ["Meals", "Personal expenses", "Gratuities"];
+  const itinerary = [
+    { time: "08:00", text: "Pickup from your hotel and briefing" },
+    { time: "09:30", text: "Scenic drive and photo stops" },
+    { time: "11:00", text: "Main site tour with guide commentary" },
+    { time: "13:00", text: "Optional hike / activity segment" },
+    { time: "16:00", text: "Return transfer to your hotel" },
+  ];
+  const faqs = [
+    { q: "Is this tour suitable for children?", a: "Yes, families are welcome. Please inform us of any special requirements." },
+    { q: "What should I bring?", a: "Comfortable shoes, sunscreen, hat, and a reusable water bottle." },
+    { q: "Can I customize the itinerary?", a: "Absolutely. Message the guide after booking to tailor the day." },
+  ];
+  const reviews = [
+    {
+      id: 1,
+      author: "Emily W.",
+      avatar: "https://i.pravatar.cc/96?img=12",
+      rating: 5,
+      date: "2025-08-03",
+      text: "Incredible experience. The guide was knowledgeable and super friendly. Highly recommended!",
+    },
+    {
+      id: 2,
+      author: "Jonas R.",
+      avatar: "https://i.pravatar.cc/96?img=30",
+      rating: 4,
+      date: "2025-06-21",
+      text: "Great route and views. Would love a bit more time at the main site, otherwise perfect.",
+    },
+  ];
+
+  // Related tours (same category, excluding current)
+  const related = EXPERIENCES_MOCK.filter(
+    (x) => x.category === item.category && x.id !== item.id
+  );
