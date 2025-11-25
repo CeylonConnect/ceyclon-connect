@@ -19,3 +19,14 @@ function Item({ q, a, defaultOpen = false }) {
     </div>
   );
 }
+
+export default function FAQAccordion({ items = [] }) {
+  if (!items.length) return null;
+  return (
+    <div className="divide-y divide-neutral-200">
+      {items.map((it, idx) => (
+        <Item key={idx} q={it.q} a={it.a} defaultOpen={idx === 0} />
+      ))}
+    </div>
+  );
+}
