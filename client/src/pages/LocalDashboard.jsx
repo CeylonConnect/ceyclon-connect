@@ -59,3 +59,16 @@ export default function LocalDashboard() {
       // silent fail; panels show errors
     }
   };
+
+ useEffect(() => {
+    if (providerId) loadStats();
+  }, [providerId]);
+
+  const tabs = useMemo(
+    () => [
+      { value: "tours", label: "My Tours" },
+      { value: "bookings", label: "Bookings" },
+      { value: "reviews", label: "Reviews" },
+    ],
+    []
+  );
