@@ -21,3 +21,41 @@ function useAuthFallback() {
   });
   return { user };
 }
+
+export default function LocalDashboard() {
+  const { user } = useAuthFallback();
+  const providerId = user?.id || "";
+
+  const [stats, setStats] = useState({
+    totalTours: 0,
+    totalBookings: 0,
+    earnings: 0,
+    rating: 0,
+  });
+
+  const [tab, setTab] = useState("tours");
+
+  const loadStats = async () => {
+    try {
+      const [tours, bookings, rating] = await Promise.all([
+        getToursByProvider(providerId).catch(() => []),
+        getBookingsByProvider(providerId).catch(() => []),
+        getGuideAverageRating(providerId).catch(() => ({ average: 0 })),
+      ]);
+      const tourList = normalizeList(tours);
+      const bookingList = normalizeList(bookings);
+
+      const earnings = bookingList
+        .filter((b) => ["approved", "completed"].includes(b.status))
+        .reduce((sum, b) => sum + Number(b.total || b.tour?.price || 0), 0);
+
+      setStats({
+        totalTours: tourList.length,
+        totalBookings: bookingList.length,
+        earnings,
+        rating: Number(rating?.average || rating?.avg || rating?.value || 0),
+      });
+    } catch (e) {
+      // silent fail; panels show errors
+    }
+  };
