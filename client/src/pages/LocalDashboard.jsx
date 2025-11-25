@@ -72,3 +72,29 @@ export default function LocalDashboard() {
     ],
     []
   );
+
+   return (
+    <main className="min-h-screen bg-sand-50">
+      <TopbarLocal name={user?.firstName} cl/>
+
+      <div className="mx-auto mt-8 max-w-7xl px-4 ">
+        <div className="grid gap-4 md:grid-cols-4">
+          <SummaryStat label="Total Tours" value={stats.totalTours} sub="Active packages" icon={<span>📅</span>} />
+          <SummaryStat label="Total Bookings" value={stats.totalBookings} sub="This month" icon={<span>💬</span>} />
+          <SummaryStat label="Earnings" value={`$${stats.earnings}`} sub="Total revenue" icon={<span>💲</span>} />
+          <SummaryStat label="Rating" value={stats.rating.toFixed(1)} sub="Average rating" icon={<span>⭐</span>} />
+        </div>
+      </div>
+
+      <section className="mx-auto mt-6 max-w-7xl px-4">
+        <Tabs value={tab} onChange={setTab} items={tabs} />
+
+        <BadgeRequestCard userId={providerId} />
+
+        {tab === "tours" && <MyToursPanel providerId={providerId} />}
+        {tab === "bookings" && <BookingsPanel providerId={providerId} />}
+        {tab === "reviews" && <ReviewsPanel guideId={providerId} />}
+      </section>
+    </main>
+  );
+}
