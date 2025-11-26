@@ -137,4 +137,23 @@ function Pagination({ total, perPage, page, onChange }) {
     </div>
   );
 }
-  
+
+export default function FeaturedExperiences({
+  items = EXPERIENCES_MOCK,
+  showPagination = true,
+  itemsPerPage = 6,
+  limit = 6,
+  title = "Featured Experiences",
+  subtitle = "Hand-picked tours by our community of verified guides",
+  showHeaderAction = true,
+}) {
+  const [page, setPage] = useState(1);
+
+  const visibleItems = useMemo(() => {
+    if (!showPagination) return items.slice(0, Math.max(0, limit));
+    const start = (page - 1) * itemsPerPage;
+    return items.slice(start, start + itemsPerPage);
+  }, [items, page, itemsPerPage, showPagination, limit]);
+
+  const total = items.length;
+
