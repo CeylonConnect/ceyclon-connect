@@ -157,3 +157,37 @@ export default function FeaturedExperiences({
 
   const total = items.length;
 
+   return (
+    <section id="featured" className="bg-white">
+      <div className="mx-auto max-w-6xl px-4 py-14">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-neutral-800">{title}</h2>
+            <p className="mt-1 text-neutral-600">{subtitle}</p>
+          </div>
+          {showHeaderAction && (
+            <a href="/tours" className="hidden sm:inline-flex rounded-xl border border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-700 shadow-sm hover:bg-neutral-50">
+              View All Tours
+            </a>
+          )}
+        </div>
+
+        <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {visibleItems.map((item) => (
+            <ExperienceCard key={item.id} item={item} />
+          ))}
+        </div>
+
+        {showPagination && (
+          <Pagination
+            total={total}
+            perPage={itemsPerPage}
+            page={page}
+            onChange={setPage}
+          />
+        )}
+      </div>
+    </section>
+  );
+}
+  
