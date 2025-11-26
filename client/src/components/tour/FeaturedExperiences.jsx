@@ -111,3 +111,30 @@ function Pagination({ total, perPage, page, onChange }) {
     }
   }
 
+  return (
+    <div className="mt-8 flex items-center justify-center gap-2">
+      <button onClick={() => go(page - 1)} disabled={page === 1}
+        className={cx("rounded-lg border px-3 py-1.5 text-sm font-medium",
+          page === 1 ? "cursor-not-allowed border-neutral-200 text-neutral-400" : "border-neutral-200 text-neutral-700 hover:bg-neutral-50")}>
+        Prev
+      </button>
+      {pages.map((p, i) =>
+        p === "..." ? (
+          <span key={`gap-${i}`} className="px-2 text-neutral-400">…</span>
+        ) : (
+          <button key={p} onClick={() => go(p)}
+            className={cx("h-9 min-w-9 rounded-lg px-3 text-sm font-semibold",
+              p === page ? "bg-neutral-900 text-white" : "text-neutral-700 hover:bg-neutral-100")}>
+            {p}
+          </button>
+        )
+      )}
+      <button onClick={() => go(page + 1)} disabled={page === totalPages}
+        className={cx("rounded-lg border px-3 py-1.5 text-sm font-medium",
+          page === totalPages ? "cursor-not-allowed border-neutral-200 text-neutral-400" : "border-neutral-200 text-neutral-700 hover:bg-neutral-50")}>
+        Next
+      </button>
+    </div>
+  );
+}
+  
