@@ -95,3 +95,19 @@ function ExperienceCard({ item }) {
     </article>
   );
 }
+
+function Pagination({ total, perPage, page, onChange }) {
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
+  if (totalPages <= 1) return null;
+
+  const go = (p) => onChange(Math.min(Math.max(1, p), totalPages));
+  const pages = [];
+  const windowSize = 1;
+  for (let p = 1; p <= totalPages; p++) {
+    if (p === 1 || p === totalPages || (p >= page - windowSize && p <= page + windowSize)) {
+      pages.push(p);
+    } else if (pages[pages.length - 1] !== "...") {
+      pages.push("...");
+    }
+  }
+
