@@ -70,3 +70,28 @@ function ExperienceCard({ item }) {
             )}
           </div>
         </div>
+<div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
+          <Meta icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-6.5 8-13A8 8 0 1 0 4 9c0 6.5 8 13 8 13Z" stroke="currentColor" strokeWidth="2"/><circle cx="12" cy="9" r="3" stroke="currentColor" strokeWidth="2"/></svg>}>
+            {item.location}
+          </Meta>
+          <Meta icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2"/><path d="M12 7v5l3 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>}>
+            {item.durationHours}h
+          </Meta>
+          <Meta icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M16 11a4 4 0 1 0-8 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M3 20a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>}>
+            Up to {item.groupSize}
+          </Meta>
+        </div>
+
+        <div className="mt-5 flex items-center justify-between">
+          <div className="text-xl font-bold text-orange-600">
+            {item.currency}{item.price}
+            <span className="ml-1 text-sm font-normal text-neutral-500">/person</span>
+          </div>
+          <a href={`/tours/${item.slug}`} className="rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:brightness-105 active:scale-95">
+            View Details
+          </a>
+        </div>
+      </div>
+    </article>
+  );
+}
