@@ -4,7 +4,7 @@ require("dotenv").config();
 
 // Import database connection and routes
 const pool = require("./src/config/database");
-const authRoutes = require("./src/routes/authRoutes");
+//const authRoutes = require("./src/routes/authRoutes");
 const reviewRoutes = require('./src/routes/reviewRoutes');
 
 
@@ -23,14 +23,14 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Routes
-app.use('/api/auth', authRoutes);
+//app.use('/api/auth', authRoutes);
 app.use('/api/reviews', reviewRoutes);
 
 
 
 // --- API Routes ---
 // Mount the authentication routes at the correct path
-app.use("/api/auth", authRoutes);
+//app.use("/api/auth", authRoutes);
 
 
 // --- Server and Database Health Checks ---
