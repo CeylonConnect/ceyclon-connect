@@ -105,3 +105,26 @@ const total = useMemo(() => {
           {maxGroup && <p className="mt-1 text-xs text-neutral-500">Max {maxGroup} guests</p>}
         </div>
       </div>
+
+      <div className="mt-5 flex items-center justify-between rounded-xl bg-neutral-50 p-3">
+        <span className="text-sm text-neutral-600">Total</span>
+        <span className="text-lg font-bold text-neutral-900">
+          {currency}
+          {total}
+        </span>
+      </div>
+
+      <button
+        type="button"
+        className="mt-4 w-full rounded-xl bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400 px-4 py-3 font-semibold text-white shadow-md transition hover:brightness-105 active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-orange-200"
+        onClick={onBook}
+      >
+        Book now
+      </button>
+
+      <p className="mt-3 text-center text-xs text-neutral-500">
+        {user ? "After you book, the guide will approve and contact you in Messages." : "Please login to continue with your booking."}
+      </p>
+    </div>
+  );
+}
