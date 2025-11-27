@@ -42,3 +42,22 @@ const total = useMemo(() => {
     // Navigate to dashboard where the banner will show "Pending local approval"
     navigate(`/dashboard?booking=${booking.id}`);
   };
+
+  return (
+    <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-lg shadow-black/5">
+      <div className="flex items-end justify-between">
+        <div className="text-2xl font-extrabold text-neutral-900">
+          {currency}
+          {price}
+          <span className="ml-1 text-sm font-normal text-neutral-500">/person</span>
+        </div>
+        <div className="inline-flex items-center gap-1 rounded-full bg-neutral-50 px-2.5 py-1 text-sm text-neutral-700">
+          <span className="text-amber-500">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="m12 17.27 6.18 3.73-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+            </svg>
+          </span>
+          {rating?.value?.toFixed(1) ?? "4.8"}{" "}
+          <span className="text-neutral-500">({rating?.count ?? 42})</span>
+        </div>
+      </div>
