@@ -61,3 +61,47 @@ const total = useMemo(() => {
           <span className="text-neutral-500">({rating?.count ?? 42})</span>
         </div>
       </div>
+
+      <div className="mt-5 space-y-4">
+        <div>
+          <label className="mb-1 block text-xs font-medium text-neutral-600">Date</label>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800 outline-none focus:ring-2 focus:ring-orange-400/40"
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-medium text-neutral-600">Guests</label>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setGuests((g) => Math.max(1, g - 1))}
+              className="h-10 w-10 rounded-xl border border-neutral-200 text-lg font-bold text-neutral-700 hover:bg-neutral-50"
+              aria-label="Decrease guests"
+            >
+              −
+            </button>
+            <input
+              type="number"
+              min={1}
+              max={maxGroup}
+              value={guests}
+              onChange={(e) =>
+                setGuests(Math.min(maxGroup || 99, Math.max(1, Number(e.target.value) || 1)))
+              }
+              className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-center text-sm text-neutral-800 outline-none focus:ring-2 focus:ring-orange-400/40"
+            />
+            <button
+              type="button"
+              onClick={() => setGuests((g) => Math.min(maxGroup || 99, g + 1))}
+              className="h-10 w-10 rounded-xl border border-neutral-200 text-lg font-bold text-neutral-700 hover:bg-neutral-50"
+              aria-label="Increase guests"
+            >
+              +
+            </button>
+          </div>
+          {maxGroup && <p className="mt-1 text-xs text-neutral-500">Max {maxGroup} guests</p>}
+        </div>
+      </div>
