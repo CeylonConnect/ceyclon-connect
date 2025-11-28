@@ -7,3 +7,5 @@ export default function ReviewCard({ review }) {
       <div className="flex-1">
 <div className="flex items-center justify-between">
           <div className="font-semibold text-neutral-800">{review.author}</div>
+ <div className="text-xs text-neutral-500">{new Date(review.date).toLocaleDateString()}</div>
+        </div>
