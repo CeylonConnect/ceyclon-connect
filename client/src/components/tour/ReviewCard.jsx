@@ -9,3 +9,4 @@ export default function ReviewCard({ review }) {
           <div className="font-semibold text-neutral-800">{review.author}</div>
  <div className="text-xs text-neutral-500">{new Date(review.date).toLocaleDateString()}</div>
         </div>
+<div className="mt-1 flex items-center gap-1 text-amber-500">
