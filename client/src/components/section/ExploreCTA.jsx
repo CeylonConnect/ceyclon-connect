@@ -33,3 +33,38 @@ function RevealBrowseButton() {
     </a>
   );
 }
+export default function ExploreCTA() {
+  return (
+    <section className="relative isolate">
+      {/* Background image */}
+      <div
+        className="absolute inset-0 -z-10 bg-cover bg-center"
+        style={{ backgroundImage: "url('/vite.svg')" }}
+      />
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 -z-0 bg-gradient-to-r from-[#e86d39]/80 via-[#d88a3f]/60 to-[#179c93]/80" />
+
+      {/* Content */}
+      <div className="mx-auto max-w-6xl px-4 py-20 text-center text-white sm:py-24 md:py-28">
+        <h2 className="text-3xl font-extrabold sm:text-4xl md:text-5xl drop-shadow-md">
+          Ready to Explore Sri Lanka?
+        </h2>
+        <p className="mx-auto mt-5 max-w-3xl text-lg md:text-xl text-white/95 drop-shadow-lg">
+          Join thousands of travelers discovering authentic experiences with local guides
+        </p>
+
+        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a
+            href="/signup"
+            className="inline-flex items-center justify-center rounded-xl bg-white/95 px-6 py-3 text-base font-semibold text-neutral-800 shadow-md transition hover:bg-white hover:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-white/50"
+          >
+            Get Started
+          </a>
+
+          <RevealBrowseButton />
+        </div>
+      </div>
+    </section>
+  );
+}
+
