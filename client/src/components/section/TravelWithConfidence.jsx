@@ -23,3 +23,17 @@ const toneMap = {
     text: "text-emerald-600",
   },
 };
+
+// Mock data
+const DEFAULT_FEATURES = [
+  {
+    id: "verified",
+    title: "Verified Guides",
+    desc: "All guides undergo background checks and certification",
+    tone: "yellow",
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 2 4 6v6c0 5 8 10 8 10s8-5 8-10V6l-8-4Zm-1 13-3-3 1.4-1.4L11 12.2l4.6-4.6L17 9l-6 6Z" />
+      </svg>
+    ),
+  },
