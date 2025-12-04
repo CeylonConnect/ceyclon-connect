@@ -80,3 +80,18 @@ const DEFAULT_FEATURES = [
   },
 ];
   
+function Feature({ item }) {
+  const tone = toneMap[item.tone] ?? toneMap.orange;
+  return (
+    <div className="flex flex-col items-center text-center">
+      {/* Icon with animation */}
+      <div
+        className={`mb-5 flex h-20 w-20 items-center justify-center rounded-full ${tone.bg} ${tone.ring} ring-1 animate-float`}
+      >
+        <span className={`${tone.text}`}>{item.icon}</span>
+      </div>
+      <h3 className="text-lg font-semibold text-neutral-800">{item.title}</h3>
+      <p className="mt-2 max-w-xs text-[15px] leading-relaxed text-neutral-600">{item.desc}</p>
+    </div>
+  );
+}
