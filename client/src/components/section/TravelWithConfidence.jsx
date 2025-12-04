@@ -37,3 +37,15 @@ const DEFAULT_FEATURES = [
       </svg>
     ),
   },
+{
+    id: "reviews",
+    title: "Trusted Reviews",
+    desc: "Authentic reviews from verified travelers",
+    tone: "orange",
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="m12 17.3 6.2 3.7-1.6-7 5-4.7-7.1-.6L12 2 9.5 8.7 2.4 9.3l5 4.7-1.6 7z" />
+      </svg>
+    ),
+  },
+  
