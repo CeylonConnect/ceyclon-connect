@@ -48,4 +48,35 @@ const DEFAULT_FEATURES = [
       </svg>
     ),
   },
+
+  {
+    id: "community",
+    title: "Community Support",
+    desc: "Direct support for local communities and families",
+    tone: "teal",
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path
+          d="M9 10a3 3 0 1 1 6 0M3 20a6 6 0 0 1 6-6h6a6 6 0 0 1 6 6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    id: "expertise",
+    title: "Local Expertise",
+    desc: "Authentic experiences with insider knowledge",
+    tone: "green",
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 22s8-6.5 8-13A8 8 0 1 0 4 9c0 6.5 8 13 8 13Z" stroke="currentColor" strokeWidth="2" />
+        <circle cx="12" cy="9" r="3" stroke="currentColor" strokeWidth="2" />
+      </svg>
+    ),
+  },
+];
   
