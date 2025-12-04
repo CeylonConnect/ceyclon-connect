@@ -54,3 +54,17 @@ export default function ExploreCTA() {
           Join thousands of travelers discovering authentic experiences with local guides
         </p>
 
+       <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a
+            href="/signup"
+            className="inline-flex items-center justify-center rounded-xl bg-white/95 px-6 py-3 text-base font-semibold text-neutral-800 shadow-md transition hover:bg-white hover:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-white/50"
+          >
+            Get Started
+          </a>
+
+          <RevealBrowseButton />
+        </div>
+      </div>
+    </section>
+  );
+}
