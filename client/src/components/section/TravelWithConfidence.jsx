@@ -95,3 +95,27 @@ function Feature({ item }) {
     </div>
   );
 }
+
+export default function TravelWithConfidence({ features = DEFAULT_FEATURES }) {
+  return (
+    <section className="bg-sand-50">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+        <div className="text-center">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-neutral-800">
+            Travel with Confidence
+          </h2>
+          <p className="mx-auto mt-3 max-w-3xl text-lg text-neutral-600">
+            Your safety and satisfaction are our top priorities
+          </p>
+        </div>
+
+        <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          {features.map((f) => (
+            <Feature key={f.id} item={f} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
