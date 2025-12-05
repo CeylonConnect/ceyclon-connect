@@ -7,6 +7,7 @@ import FeaturedExperiences from "../components/section/FeaturedExperiences";
 import TravelWithConfidence from "../components/section/TravelWithConfidence";
 import UpcomingEvents from "../components/section/UpComingEvents";
 import ExploreCTA from "../components/section/ExploreCTA";
+import Footer from "../components/Footer";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ export default function Home() {
         <TravelWithConfidence />
         <UpcomingEvents showPagination={false} limit={2} />
         <ExploreCTA />
+        <Footer />
       </main>
     </>
   );
