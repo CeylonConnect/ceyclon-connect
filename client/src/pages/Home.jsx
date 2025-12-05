@@ -6,6 +6,7 @@ import HowCeylonConnectWorks from "../components/section/HowCeyloneConnectWork";
 import FeaturedExperiences from "../components/section/FeaturedExperiences";
 import TravelWithConfidence from "../components/section/TravelWithConfidence";
 import UpcomingEvents from "../components/section/UpComingEvents";
+import ExploreCTA from "../components/section/ExploreCTA";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ export default function Home() {
         <FeaturedExperiences showPagination={false} limit={6} />
         <TravelWithConfidence />
         <UpcomingEvents showPagination={false} limit={2} />
+        <ExploreCTA />
       </main>
     </>
   );
