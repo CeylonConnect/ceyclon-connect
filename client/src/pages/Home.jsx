@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import HowCeylonConnectWorks from "../components/section/HowCeyloneConnectWork";
 import FeaturedExperiences from "../components/section/FeaturedExperiences";
+import TravelWithConfidence from "../components/section/TravelWithConfidence";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ export default function Home() {
         <Hero />
         <HowCeylonConnectWorks />
         <FeaturedExperiences showPagination={false} limit={6} />
+        <TravelWithConfidence />
       </main>
     </>
   );
