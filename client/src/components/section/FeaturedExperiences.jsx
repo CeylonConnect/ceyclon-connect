@@ -16,3 +16,10 @@ function RatingBadge({ value, count }) {
   );
 }
 
+function CategoryChip({ label }) {
+  return (
+    <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-neutral-700 shadow">
+      {label}
+    </span>
+  );
+}
