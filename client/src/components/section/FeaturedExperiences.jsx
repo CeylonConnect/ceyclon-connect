@@ -77,4 +77,32 @@ function ExperienceCard({ item }) {
             Up to {item.groupSize}
           </Meta>
         </div>
-      
+       <div className="mt-5 flex items-center justify-between">
+          <div className="text-xl font-bold text-orange-600">
+            {item.currency}{item.price}
+            <span className="ml-1 text-sm font-normal text-neutral-500">/person</span>
+          </div>
+          <a href={`/tours/${item.slug}`} className="rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:brightness-105 active:scale-95">
+            View Details
+          </a>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function Pagination({ total, perPage, page, onChange }) {
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
+  if (totalPages <= 1) return null;
+
+  const go = (p) => onChange(Math.min(Math.max(1, p), totalPages));
+  const pages = [];
+  const windowSize = 1;
+  for (let p = 1; p <= totalPages; p++) {
+    if (p === 1 || p === totalPages || (p >= page - windowSize && p <= page + windowSize)) {
+      pages.push(p);
+    } else if (pages[pages.length - 1] !== "...") {
+      pages.push("...");
+    }
+  }
+
