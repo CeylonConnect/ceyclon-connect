@@ -23,3 +23,11 @@ function CategoryChip({ label }) {
     </span>
   );
 }
+function Meta({ icon, children }) {
+  return (
+    <div className="inline-flex items-center gap-1.5 text-sm text-neutral-600">
+      <span className="text-neutral-500">{icon}</span>
+      {children}
+    </div>
+  );
+}
