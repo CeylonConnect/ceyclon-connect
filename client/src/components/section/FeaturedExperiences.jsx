@@ -45,4 +45,11 @@ function ExperienceCard({ item }) {
           <CategoryChip label={item.category} />
         </div>
       </div>
-
+    <div className="p-5 sm:p-6">
+        <h3 className="text-xl font-semibold text-neutral-800">{item.title}</h3>
+        <p
+          className="mt-2 text-[15px] text-neutral-600"
+          style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
+        >
+          {item.excerpt}
+        </p>
