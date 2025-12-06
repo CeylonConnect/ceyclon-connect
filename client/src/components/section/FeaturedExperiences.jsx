@@ -53,3 +53,17 @@ function ExperienceCard({ item }) {
         >
           {item.excerpt}
         </p>
+         <div className="mt-4 flex items-center gap-3">
+          <img src={item.guide.avatar} alt={item.guide.name} className="h-9 w-9 rounded-full object-cover" loading="lazy" />
+          <div className="text-sm font-medium text-neutral-800 flex items-center gap-1">
+            {item.guide.name}
+            {item.guide.verified && (
+              <span className="text-amber-500" title="Verified guide" aria-label="Verified guide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2 3 8v8l9 6 9-6V8l-9-6Zm-1 13-3-3 1.4-1.4L11 12.2l4.6-4.6L17 9l-6 6Z" />
+                </svg>
+              </span>
+            )}
+          </div>
+        </div>
+      
