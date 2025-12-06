@@ -31,3 +31,18 @@ function Meta({ icon, children }) {
     </div>
   );
 }
+
+function ExperienceCard({ item }) {
+  return (
+    <article className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg">
+      <div className="relative h-56 w-full overflow-hidden">
+        <img src={item.image} alt={item.title} className="h-full w-full object-cover" loading="lazy" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+        <div className="absolute left-4 bottom-4">
+          <RatingBadge value={item.rating.value} count={item.rating.count} />
+        </div>
+        <div className="absolute right-4 top-4">
+          <CategoryChip label={item.category} />
+        </div>
+      </div>
+
