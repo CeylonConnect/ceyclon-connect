@@ -17,6 +17,7 @@ router.post("/", sendMessage);
 // ✅ Get conversation between two users (optional booking filter)
 router.get("/conversation/:user1Id/:user2Id", getConversation);
 
+
 // ✅ Get all conversations for a user (last message preview)
 router.get("/user/:userId", getUserConversations);
 
