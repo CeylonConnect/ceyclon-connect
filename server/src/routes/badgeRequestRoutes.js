@@ -9,7 +9,6 @@ import {
 } from "../controllers/badgeRequestController.js";
 
 const router = express.Router();
-
 // Get all badge requests of a user
 router.get("/user/:userId", getUserBadgeRequests);
 
