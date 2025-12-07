@@ -9,6 +9,7 @@ import {
 
 const router = express.Router();
 
+
 // ✅ Send a new message
 router.post("/", sendMessage);
 
