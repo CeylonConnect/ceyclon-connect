@@ -1,6 +1,6 @@
 import express from "express";
 import {createReview, getReviewsByTour, getReviewsByGuide,
-  getAverageRating, getGuideAverageRating,
+ getAverageRating, getGuideAverageRating,
   getReviewStats, }from "../controllers/reviewController.js";
 
 const router = express.Router();
