@@ -29,4 +29,5 @@ router.put("/:messageId/read", markMessageAsRead);
 // ✅ Get unread message count for a user
 router.get("/user/:userId/unread-count", getUnreadCount);
 
+
 export default router;
