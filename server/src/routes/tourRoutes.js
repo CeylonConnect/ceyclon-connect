@@ -18,5 +18,4 @@ router.put("/:id", updateTour);
 router.delete("/:id", deleteTour);
 router.get("/districts/grouped", getToursByDistrict);
 
-
 export default router;
