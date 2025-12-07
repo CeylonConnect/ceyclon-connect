@@ -10,6 +10,7 @@ import {
 } from "../controllers/tourController.js";
 const router = express.Router();
 
+
 router.post("/", createTour);
 router.get("/", getAllTours);
 router.get("/:id", getTourById);
