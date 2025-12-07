@@ -13,6 +13,7 @@ const router = express.Router();
 // ✅ Send a new message
 router.post("/", sendMessage);
 
+
 // ✅ Get conversation between two users (optional booking filter)
 router.get("/conversation/:user1Id/:user2Id", getConversation);
 
