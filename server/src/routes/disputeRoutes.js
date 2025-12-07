@@ -9,7 +9,6 @@ import {
 
 const router = express.Router();
 
-
 router.post("/", createDispute);
 router.get("/", getAllDisputes);
 router.get("/:id", getDisputeById);
