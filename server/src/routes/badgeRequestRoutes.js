@@ -21,7 +21,6 @@ router.post("/", createBadgeRequest);
 // Get a badge request by ID
 router.get("/:id", getBadgeRequestById);
 
-
 // Get all badge requests (admin) with optional status filter
 router.get("/", getAllBadgeRequests);
 
