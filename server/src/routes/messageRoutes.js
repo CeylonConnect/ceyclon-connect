@@ -21,6 +21,7 @@ router.get("/conversation/:user1Id/:user2Id", getConversation);
 // ✅ Get all conversations for a user (last message preview)
 router.get("/user/:userId", getUserConversations);
 
+
 // ✅ Mark message as read
 router.put("/:messageId/read", markMessageAsRead);
 
