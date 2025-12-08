@@ -1,3 +1,5 @@
+// add avatar for profile
+
 import React, { useState } from "react";
 
 function initialsOf(name = "", email = "") {
@@ -37,4 +39,5 @@ export default function Avatar({
       {initialsOf(name, email)}
     </div>
   );
+
 }
