@@ -37,5 +37,17 @@ export default function Reveal({
     return () => io.disconnect();
   }, [threshold, once]);
 
- 
+  return (
+    <Tag
+      ref={ref}
+      className={[
+        className,
+        "transition-all duration-700 ease-out will-change-transform transform-gpu",
+        show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3",
+        "motion-reduce:transition-none motion-reduce:opacity-100 motion-reduce:translate-y-0",
+      ].join(" ")}
+    >
+      {children}
+    </Tag>
+  );
 }
