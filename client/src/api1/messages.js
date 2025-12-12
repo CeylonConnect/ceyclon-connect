@@ -12,3 +12,6 @@ export const getReviewsByTour = async (tourId) => {
   const res = await api.get(`/reviews/tour/${encodeURIComponent(tourId)}`);
   return normalizeList(res);
 };
+
+export const getAverageRating = (tourId) =>
+  api.get(`/reviews/tour/${encodeURIComponent(tourId)}/average`);
