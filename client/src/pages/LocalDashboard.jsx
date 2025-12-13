@@ -1,15 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
-import TopbarLocal from "../components/local/TopbarLocal";
-import SummaryStat from "../components/local/SummaryStat";
-import Tabs from "../components/admin/Tabs";
-import MyToursPanel from "../components/local/MyTourPanel";
-import BookingsPanel from "../components/local/BookingPanel";
-import ReviewsPanel from "../components/local/ReviewPanel";
-import BadgeRequestCard from "../components/local/BadgeRequestCard";
-import { getBookingsByProvider } from "../api1/booking";
-import { getToursByProvider } from "../api1/tours";
-import { getGuideAverageRating } from "../api1/reviews";
-import { normalizeList } from "../api1/client";
+import TopbarLocal from "../components/local/TopbarLocal.jsx";
+import SummaryStat from "../components/local/SummaryStat.jsx";
+import Tabs from "../components/admin/Tabs.jsx";
+import MyToursPanel from "../components/local/MyTourPanel.jsx";
+import BookingsPanel from "../components/local/BookingPanel.jsx";
+import ReviewsPanel from "../components/local/ReviewPanel.jsx";
+import BadgeRequestCard from "../components/local/BadgeRequestCard.jsx";
+import { getBookingsByProvider } from "../api1/booking.js";
+import { getToursByProvider } from "../api1/tours.js";
+import { getGuideAverageRating } from "../api1/reviews.js";
+import { normalizeList } from "../api1/client.js";
 
 // Replace with real auth integration
 function useAuthFallback() {
