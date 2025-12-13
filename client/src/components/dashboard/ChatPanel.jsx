@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import PropTypes from "prop-types";
 import { useBooking } from "../../state/BookingContext";
 import { useAuth } from "../../state/AuthContext";
 
@@ -106,3 +107,7 @@ export default function ChatPanel({ initialGuideId }) {
     </div>
   );
 }
+
+ChatPanel.propTypes = {
+  initialGuideId: PropTypes.number,
+};
