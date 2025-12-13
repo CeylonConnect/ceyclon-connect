@@ -105,10 +105,10 @@ export default function ChatPanel({ initialGuideId }) {
           />
           <button
             onClick={onSend}
-            disabled={!activeGuideId || !text.trim()}
+            disabled={!activeGuideId || !text.trim() || isSending}
             className="rounded-xl bg-neutral-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
           >
-            Send
+            {isSending ? 'Sending...' : 'Send'}
           </button>
         </div>
       </div>
