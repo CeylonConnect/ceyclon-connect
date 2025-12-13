@@ -23,6 +23,17 @@ import eventRoutes from "./src/routes/eventRoutes.js";
 
 dotenv.config();
 
+/**
+ * Validate required environment variables
+ */
+const requiredEnvVars = ['PORT'];
+const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
+
+if (missingEnvVars.length > 0) {
+  console.warn(`⚠️  Warning: Missing environment variables: ${missingEnvVars.join(', ')}`);
+  console.warn('⚠️  Using default values where applicable');
+}
+
 const app = express();
 
 /**
