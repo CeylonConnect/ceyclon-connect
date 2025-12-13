@@ -25,6 +25,11 @@ dotenv.config();
 
 const app = express();
 
+/**
+ * CORS Configuration
+ * Allows requests from the client application and multiple local development ports
+ * to support various Vite dev server instances
+ */
 const allowedOrigins = [
   process.env.CLIENT_URL,
   "http://localhost:5173",
