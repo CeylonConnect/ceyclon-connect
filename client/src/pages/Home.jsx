@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import Hero from "../components/Hero";
+import Hero from "../components/Hero.jsx";
 import HowCeylonConnectWorks from "../components/section/HowCeyloneConnectWork";
 import FeaturedExperiences from "../components/section/FeaturedExperiences";
 import TravelWithConfidence from "../components/section/TravelWithConfidence";
