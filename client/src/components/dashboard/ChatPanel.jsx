@@ -19,13 +19,21 @@ export default function ChatPanel({ initialGuideId }) {
     initialGuideId || guides[0]?.id || null
   );
   const [text, setText] = useState("");
+  const [isSending, setIsSending] = useState(false);
 
   const thread = messages[activeGuideId] ?? [];
 
-  const onSend = () => {
-    if (!text.trim() || !activeGuideId) return;
-    sendMessage({ guideId: activeGuideId, sender: "user", text: text.trim() });
-    setText("");
+  const onSend = async () => {
+    if (!text.trim() || !activeGuideId || isSending) return;
+    setIsSending(true);
+    try {
+      await sendMessage({ guideId: activeGuideId, sender: "user", text: text.trim() });
+      setText("");
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
