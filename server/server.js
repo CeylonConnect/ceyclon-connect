@@ -1,72 +1,75 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
 
-// Import database connection and routes
-const pool = require("./src/config/database");
-//const authRoutes = require("./src/routes/authRoutes");
-const reviewRoutes = require('./src/routes/reviewRoutes');
+import userRoutes from "./src/routes/userRoutes.js";
 
+import tourRoutes from "./src/routes/tourRoutes.js";
+
+import reviewRoutes from "./src/routes/reviewRoutes.js";
+
+import bookingRoutes from "./src/routes/bookingRoutes.js";
+
+import messageRoutes from "./src/routes/messageRoutes.js";
+
+import badgeRequestRoutes from "./src/routes/badgeRequestRoutes.js";
+
+import adminRoutes from "./src/routes/adminRoutes.js";
+
+import disputeRoutes from "./src/routes/disputeRoutes.js";
+
+import eventRoutes from "./src/routes/eventRoutes.js";
+
+
+dotenv.config();
 
 const app = express();
 
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:5175",
+  "http://localhost:4173",
+  "http://localhost:4174",
+  "http://localhost:4175",
+].filter(Boolean);
 
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, origin || allowedOrigins[0]);
+      } else {
+        callback(new Error(`CORS blocked for origin: ${origin}`));
+      }
+    },
 
-// 1. CORS Configuration: Explicitly allow requests from your frontend
-const corsOptions = {
-  origin: "http://localhost:5173" || "http://localhost:5174" ,// Use your frontend's actual port
-  optionsSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
-
-// 2. Body Parsers: Use the modern, built-in Express parsers
+    credentials: true,
+  })
+);
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+
 // Routes
-//app.use('/api/auth', authRoutes);
-app.use("/reviews", reviewRoutes);
+app.use("/api/users", userRoutes);
 
+app.use("/api/tours", tourRoutes);
 
+app.use("/api/reviews", reviewRoutes);
 
-// --- API Routes ---
-// Mount the authentication routes at the correct path
-//app.use("/api/auth", authRoutes);
+app.use("/api/bookings", bookingRoutes);
 
+app.use("/api/messages", messageRoutes);
 
-// --- Server and Database Health Checks ---
+app.use("/api/badges", badgeRequestRoutes);
 
-// Simple test route
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    message: "🚀 CeylonConnect Backend is running!",
-    timestamp: new Date().toISOString(),
-  });
-});
+app.use("/api/admin", adminRoutes);
 
-// Database test route
-app.get("/test-db", async (req, res) => {
-  try {
-    const result = await pool.query("SELECT NOW() as current_time");
-    res.json({
-      success: true,
-      message: "Database connection successful!",
-      time: result.rows[0].current_time,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Database connection failed",
-      error: error.message,
-    });
-  }
-});
+app.use("/api/disputes", disputeRoutes);
 
-
-// --- Server Initialization ---
+app.use("/api/events", eventRoutes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
-  
-});
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
