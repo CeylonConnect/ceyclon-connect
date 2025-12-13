@@ -1,31 +1,40 @@
-// Minimal API layer with graceful fallback to mock data.
-// Point VITE_API_BASE to your ceyclon-connect-api when ready.
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Login from "./pages/login.jsx";
+import Signup from "./pages/Signup.jsx";
+import Home from "./pages/Home.jsx";
+import Tours from "./pages/tour.jsx";
+import TourDetails from "./pages/TourDetails.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import Event from "./pages/Events.jsx";
+import About from "./pages/about.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
+import LocalDashboard from "./pages/LocalDashboard.jsx";
+import { AuthProvider } from "./state/AuthContext";
+import { BookingProvider } from "./state/BookingContext";
 
-import { mockGuides, mockTours } from '../data/mock.js'
+export default function App() {
+  return (
+    <AuthProvider>
+      <BookingProvider>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
 
-const API_BASE = import.meta.env.VITE_API_BASE
+          <Route path="/tours" element={<Tours />} />
+          <Route path="/tours/:slug" element={<TourDetails />} />
 
-async function get(path) {
-  if (!API_BASE) return null
-  try {
-    const res = await fetch(`${API_BASE}${path}`)
-    if (!res.ok) throw new Error('Bad response')
-    return await res.json()
-  } catch {
-    return null
-  }
-}
+          <Route path="/events" element={<Event />} />
+          <Route path="/about" element={<About />} />
 
-export async function fetchTours() {
-  // Expected API response shape (example):
-  // [{ id, title, image, category, price, location, description, duration, capacity, rating, reviews, guide: {name, initials} }]
-  const data = await get('/tours')
-  return Array.isArray(data) && data.length ? data : mockTours
-}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/local" element={<LocalDashboard />} />
 
-export async function fetchGuides() {
-  // Expected API response shape (example):
-  // [{ id, name, initials, specialty, location, description, rating, ratingCount, tours, languages:[], badges:[] }]
-  const data = await get('/guides')
-  return Array.isArray(data) && data.length ? data : mockGuides
+          <Route path="*" element={<div className="p-8 text-center">Page not found</div>} />
+        </Routes>
+      </BookingProvider>
+    </AuthProvider>
+  );
 }
