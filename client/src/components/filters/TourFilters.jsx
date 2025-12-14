@@ -79,6 +79,40 @@ export default function TourFilters({
 
           
         </div>
+
+        {/* Categories (multi-select pills) */}
+        <div className="mt-4">
+          <div className="mb-2 flex items-center justify-between">
+            <label className="block text-xs font-medium text-neutral-600">Categories</label>
+            <button
+              type="button"
+              onClick={() => set("categories", [])}
+              className="text-xs font-semibold text-neutral-600 hover:text-neutral-800"
+            >
+              Clear
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => {
+              const active = (values.categories || []).includes(cat);
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => toggleCategory(cat)}
+                  className={[
+                    "rounded-full px-3 py-1.5 text-sm transition border",
+                    active
+                      ? "text-neutral-800 border-transparent bg-gradient-to-r from-orange-100 to-yellow-100"
+                      : "text-neutral-700 border-neutral-200 hover:bg-neutral-50",
+                  ].join(" ")}
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </div>
+        </div>
         
       </div>
     </div>
