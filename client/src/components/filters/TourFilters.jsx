@@ -113,6 +113,23 @@ export default function TourFilters({
             })}
           </div>
         </div>
+
+        <div className="mt-4 flex items-center justify-end gap-3">
+          <button
+            type="button"
+            onClick={onReset}
+            className="rounded-xl border border-neutral-200 px-3 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-50"
+          >
+            Reset
+          </button>
+          <button
+            type="button"
+            className="rounded-xl bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-105"
+            onClick={() => {}}
+          >
+            Apply
+          </button>
+        </div>
         
       </div>
     </div>
