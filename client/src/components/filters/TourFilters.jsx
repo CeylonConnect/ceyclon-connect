@@ -51,6 +51,32 @@ export default function TourFilters({
             </select>
           </div>
 
+          {/* Price range */}
+          <div className="md:col-span-1">
+            <label className="mb-1 block text-xs font-medium text-neutral-600">Price range (USD)</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                inputMode="numeric"
+                min={0}
+                placeholder="Min"
+                value={values.minPrice}
+                onChange={(e) => set("minPrice", e.target.value)}
+                className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800 outline-none focus:ring-2 focus:ring-orange-400/40"
+              />
+              <span className="text-neutral-400">–</span>
+              <input
+                type="number"
+                inputMode="numeric"
+                min={0}
+                placeholder="Max"
+                value={values.maxPrice}
+                onChange={(e) => set("maxPrice", e.target.value)}
+                className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800 outline-none focus:ring-2 focus:ring-orange-400/40"
+              />
+            </div>
+          </div>
+
           
         </div>
         
