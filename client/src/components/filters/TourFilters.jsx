@@ -35,6 +35,21 @@ export default function TourFilters({
               ))}
             </select>
           </div>
+
+          {/* Provider */}
+          <div className="md:col-span-2">
+            <label className="mb-1 block text-xs font-medium text-neutral-600">Provider</label>
+            <select
+              value={values.provider}
+              onChange={(e) => set("provider", e.target.value)}
+              className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800 outline-none focus:ring-2 focus:ring-orange-400/40"
+            >
+              <option value="">All providers</option>
+              {providers.map((p) => (
+                <option key={p} value={p}>{p}</option>
+              ))}
+            </select>
+          </div>
           
         </div>
         
