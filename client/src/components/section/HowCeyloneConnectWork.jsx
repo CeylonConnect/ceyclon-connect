@@ -1,68 +1,112 @@
 import React from "react";
 
-function RevealBrowseButton() {
-  // White pill that reveals "Browse Tours" only on hover
+function StepCard({ tone = "orange", title, desc, number, icon }) {
+  const tones = {
+    orange: {
+      bg: "bg-orange-50",
+      ring: "ring-orange-100",
+      text: "text-orange-600",
+    },
+    teal: {
+      bg: "bg-teal-50",
+      ring: "ring-teal-100",
+      text: "text-teal-600",
+    },
+    yellow: {
+      bg: "bg-yellow-50",
+      ring: "ring-yellow-100",
+      text: "text-amber-500",
+    },
+  }[tone];
+
   return (
-    <a
-      href="/tours"
-      aria-label="Browse Tours"
-      className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-xl bg-white/95 px-6 text-base font-semibold text-neutral-800 shadow-md transition hover:bg-white hover:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-white/50"
-    >
-      {/* Optional leading icon that is always visible */}
-      <svg
-        className="w-6 h-6 text-neutral-800 animate-bounce"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
+    <div className="group rounded-2xl border border-neutral-200 bg-white p-8 text-center shadow-sm ring-1 ring-black/5 transition hover:-translate-y-1 hover:shadow-lg">
+      <div
+        className={`mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full ${tones.bg} ${tones.ring} ring-1 transition-transform duration-300 animate-bounce-slow`}
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"
-        />
-      </svg>
-
-      {/* Reveal text: hidden until hover */}
-      <span className="ml-0 max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all duration-300 ease-out group-hover:ml-3 group-hover:max-w-[200px] group-hover:opacity-100">
-        Browse Tours
-      </span>
-
-      {/* Subtle shine sweep on hover (no custom keyframes needed) */}
-      <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/70 to-transparent opacity-0 transition duration-500 ease-out group-hover:translate-x-full group-hover:opacity-100" />
-    </a>
+        <div className={`${tones.text} w-10 h-10`}>
+          {icon}
+        </div>
+      </div>
+      <h3 className="text-xl font-semibold text-neutral-800">
+        {number}. {title}
+      </h3>
+      <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-neutral-600">
+        {desc}
+      </p>
+    </div>
   );
 }
 
-export default function ExploreCTA() {
+export default function HowCeylonConnectWorks() {
   return (
-    <section className="relative isolate">
-      {/* Background image */}
-      <div
-        className="absolute inset-0 -z-10 bg-cover bg-center"
-        style={{ backgroundImage: "url('/vite.svg')" }}
-      />
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 -z-0 bg-gradient-to-r from-[#e86d39]/80 via-[#d88a3f]/60 to-[#179c93]/80" />
-
-      {/* Content */}
-      <div className="mx-auto max-w-6xl px-4 py-20 text-center text-white sm:py-24 md:py-28">
-        <h2 className="text-3xl font-extrabold sm:text-4xl md:text-5xl drop-shadow-md">
-          Ready to Explore Sri Lanka?
+    <section className="bg-neutral-50">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+        <h2 className="text-center text-3xl sm:text-4xl font-extrabold text-neutral-800">
+          How CeylonConnect Works
         </h2>
-        <p className="mx-auto mt-5 max-w-3xl text-lg md:text-xl text-white/95 drop-shadow-lg">
-          Join thousands of travelers discovering authentic experiences with local guides
+        <p className="mx-auto mt-3 max-w-3xl text-center text-lg text-neutral-600">
+          Your journey to authentic Sri Lankan experiences in three simple steps
         </p>
 
-       <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <a
-            href="/signup"
-            className="inline-flex items-center justify-center rounded-xl bg-white/95 px-6 py-3 text-base font-semibold text-neutral-800 shadow-md transition hover:bg-white hover:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-white/50"
-          >
-            Get Started
-          </a>
-
-          <RevealBrowseButton />
+        <div className="mt-10 grid gap-6 md:grid-cols-3 md:gap-8">
+          <StepCard
+            number={1}
+            title="Discover Tours"
+            desc="Browse authentic experiences curated by verified local guides across Sri Lanka"
+            tone="orange"
+            icon={
+              <svg
+                width="34"
+                height="34"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="M21 21l-3.6-3.6" />
+              </svg>
+            }
+          />
+          <StepCard
+            number={2}
+            title="Connect & Book"
+            desc="Chat with guides, customize your tour, and book securely through our platform"
+            tone="teal"
+            icon={
+              <svg
+                width="34"
+                height="34"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinejoin="round"
+              >
+                <path d="M21 12a7 7 0 0 1-7 7H7l-4 3V12a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7Z" />
+              </svg>
+            }
+          />
+          <StepCard
+            number={3}
+            title="Experience & Share"
+            desc="Enjoy your personalized tour and share your experience to help other travelers"
+            tone="yellow"
+            icon={
+              <svg
+                width="34"
+                height="34"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="m12 17.3 6.2 3.7-1.6-7 5-4.7-7.1-.6L12 2 9.5 8.7 2.4 9.3l5 4.7-1.6 7z" />
+              </svg>
+            }
+          />
         </div>
       </div>
     </section>
