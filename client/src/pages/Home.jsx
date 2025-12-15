@@ -2,11 +2,11 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero.jsx";
-import HowCeylonConnectWorks from "../components/section/HowCeyloneConnectWork";
-import FeaturedExperiences from "../components/section/FeaturedExperiences";
-import TravelWithConfidence from "../components/section/TravelWithConfidence";
-import UpcomingEvents from "../components/section/UpComingEvents";
-import ExploreCTA from "../components/section/ExploreCTA";
+import HowCeylonConnectWorks from "../components/section/HowCeyloneConnectWork.jsx";
+import FeaturedExperiences from "../components/section/FeaturedExperiences.jsx";
+import TravelWithConfidence from "../components/section/TravelWithConfidence.jsx";
+import UpcomingEvents from "../components/section/UpComingEvents.jsx";
+import ExploreCTA from "../components/section/ExploreCTA.jsx";
 import Footer from "../components/Footer";
 
 export default function Home() {
