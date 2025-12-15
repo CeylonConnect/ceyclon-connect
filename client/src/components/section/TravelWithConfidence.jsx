@@ -37,7 +37,7 @@ const DEFAULT_FEATURES = [
       </svg>
     ),
   },
-{
+  {
     id: "reviews",
     title: "Trusted Reviews",
     desc: "Authentic reviews from verified travelers",
