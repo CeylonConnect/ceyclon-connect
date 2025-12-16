@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { useBooking } from "../../state/BookingContext";
 import { useAuth } from "../../state/AuthContext";
@@ -20,8 +20,14 @@ export default function ChatPanel({ initialGuideId }) {
   );
   const [text, setText] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const messagesEndRef = useRef(null);
 
   const thread = messages[activeGuideId] ?? [];
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [thread]);
 
   const onSend = async () => {
     if (!text.trim() || !activeGuideId || isSending) return;
@@ -93,6 +99,7 @@ export default function ChatPanel({ initialGuideId }) {
               </div>
             ))
           )}
+          <div ref={messagesEndRef} />
         </div>
 
         <div className="flex items-center gap-2 border-t border-neutral-200 p-3">
