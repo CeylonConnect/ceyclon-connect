@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { useAuth } from "../state/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -224,4 +225,15 @@ bg-clip-text text-transparent"
     </header>
   );
 }
+
+Navbar.propTypes = {
+  onLoginClick: PropTypes.func,
+  onSignupClick: PropTypes.func,
+  onDashboardClick: PropTypes.func,
+};
+
+NavLink.propTypes = {
+  children: PropTypes.node.isRequired,
+  href: PropTypes.string,
+};
 
