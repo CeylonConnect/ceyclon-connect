@@ -1,15 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
-import TopbarLocal from "../components/local/TopbarLocal.jsx";
-import SummaryStat from "../components/local/SummaryStat.jsx";
-import Tabs from "../components/admin/Tabs.jsx";
-import MyToursPanel from "../components/local/MyTourPanel.jsx";
-import BookingsPanel from "../components/local/BookingPanel.jsx";
-import ReviewsPanel from "../components/local/ReviewPanel.jsx";
-import BadgeRequestCard from "../components/local/BadgeRequestCard.jsx";
-import { getBookingsByProvider } from "../api1/booking.js";
-import { getToursByProvider } from "../api1/tours.js";
-import { getGuideAverageRating } from "../api1/reviews.js";
-import { normalizeList } from "../api1/client.js";
+import TopbarLocal from "../components/local/TopbarLocal";
+import SummaryStat from "../components/local/SummaryStat";
+import Tabs from "../components/admin/Tabs";
+import MyToursPanel from "../components/local/MyTourPanel";
+import BookingsPanel from "../components/local/BookingPanel";
+import ReviewsPanel from "../components/local/ReviewPanel";
+import BadgeRequestCard from "../components/local/BadgeRequestCard";
+import { getBookingsByProvider } from "../api/booking";
+import { getToursByProvider } from "../api/tours";
+import { getGuideAverageRating } from "../api/reviews";
+import { normalizeList } from "../api/client";
 
 // Replace with real auth integration
 function useAuthFallback() {
@@ -60,7 +60,7 @@ export default function LocalDashboard() {
     }
   };
 
- useEffect(() => {
+  useEffect(() => {
     if (providerId) loadStats();
   }, [providerId]);
 
@@ -73,11 +73,11 @@ export default function LocalDashboard() {
     []
   );
 
-   return (
+  return (
     <main className="min-h-screen bg-sand-50">
       <TopbarLocal name={user?.firstName} cl/>
 
-      <div className="mx-auto mt-8 max-w-7xl px-4 ">
+      <div className="px-4 mx-auto mt-8 max-w-7xl ">
         <div className="grid gap-4 md:grid-cols-4">
           <SummaryStat label="Total Tours" value={stats.totalTours} sub="Active packages" icon={<span>📅</span>} />
           <SummaryStat label="Total Bookings" value={stats.totalBookings} sub="This month" icon={<span>💬</span>} />
@@ -86,7 +86,7 @@ export default function LocalDashboard() {
         </div>
       </div>
 
-      <section className="mx-auto mt-6 max-w-7xl px-4">
+      <section className="px-4 mx-auto mt-6 max-w-7xl">
         <Tabs value={tab} onChange={setTab} items={tabs} />
 
         <BadgeRequestCard userId={providerId} />
