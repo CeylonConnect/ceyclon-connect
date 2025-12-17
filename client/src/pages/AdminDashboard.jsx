@@ -19,7 +19,7 @@ export default function AdminDashboard() {
     { value: "events", label: "Events" },
   ];
 
- return (
+  return (
     <main className="min-h-screen bg-sand-50">
       <AdminTopbar />
       <StatsHeader />
