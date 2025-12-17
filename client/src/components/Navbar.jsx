@@ -6,7 +6,9 @@ import { useNavigate } from "react-router-dom";
 const NavLink = ({ children, href = "#" }) => (
   <a
     href={href}
-    className="px-3 py-2 text-[15px] font-medium text-neutral-700 hover:text-neutral-900 transition-colors"
+    className="px-3 py-2 text-[15px] font-medium text-neutral-700 hover:text-neutral-900 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 rounded-lg"
+    role="link"
+    tabIndex={0}
   >
     {children}
   </a>
