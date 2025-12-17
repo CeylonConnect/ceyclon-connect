@@ -1,7 +1,14 @@
+/**
+ * Ceylon Connect API Server
+ * Main entry point for the backend application
+ * @module server
+ */
+
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 
+// Route imports
 import userRoutes from "./src/routes/userRoutes.js";
 
 import tourRoutes from "./src/routes/tourRoutes.js";
