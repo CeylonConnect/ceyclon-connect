@@ -36,7 +36,6 @@ export const Dispute = {
     const result = await pool.query(query, values);
     return result.rows[0];
   },
-
   async delete(disputeId) {
     const query = "DELETE FROM disputes WHERE dispute_id = $1 RETURNING *";
     const result = await pool.query(query, [disputeId]);
