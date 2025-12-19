@@ -32,6 +32,7 @@ export const Event = {
     return result.rows;
   },
 
+  
   async update(eventId, data) {
     const { title, description, location, event_date, event_time, image_url } =
       data;
