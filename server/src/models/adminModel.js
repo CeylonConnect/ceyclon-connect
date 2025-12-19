@@ -1,5 +1,4 @@
 const pool = require("../config/database");
-
 const Admin = {
   async getPlatformStats() {
     try {
