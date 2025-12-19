@@ -13,6 +13,7 @@ export const Dispute = {
     return result.rows[0];
   },
 
+  
   async findById(disputeId) {
     const query = "SELECT * FROM disputes WHERE dispute_id = $1";
     const result = await pool.query(query, [disputeId]);
