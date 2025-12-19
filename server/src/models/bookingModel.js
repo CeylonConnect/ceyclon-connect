@@ -18,7 +18,6 @@ const Booking = {
         RETURNING *
       `;
       
-
       const values = [
         tourist_id,
         tour_id,
