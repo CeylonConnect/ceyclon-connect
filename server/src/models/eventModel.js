@@ -21,6 +21,7 @@ export const Event = {
     const result = await pool.query(query, values);
     return result.rows[0];
   },
+  
 
   async findById(eventId) {
     const query = "SELECT * FROM events WHERE event_id = $1";
