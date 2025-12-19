@@ -9,6 +9,7 @@ export const Event = {
       RETURNING *
     `;
     
+    
     const values = [
       title,
       description,
