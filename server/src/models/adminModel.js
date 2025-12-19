@@ -18,7 +18,6 @@ const Admin = {
       throw error;
     }
   },
-
   async getBookingStats(timeframe = "month") {
     try {
       let interval = "1 month";
