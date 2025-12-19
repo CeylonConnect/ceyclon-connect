@@ -1,5 +1,4 @@
 import pool from "../config/database.js";
-
 export const Event = {
   async create(data) {
     const { title, description, location, event_date, event_time, image_url } =
