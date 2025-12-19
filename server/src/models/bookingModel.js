@@ -12,6 +12,7 @@ const Booking = {
         special_requests,
       } = bookingData;
 
+      
       const query = `
         INSERT INTO bookings (tourist_id, tour_id, tour_date, group_size, total_amount, special_requests)
         VALUES ($1, $2, $3, $4, $5, $6)
