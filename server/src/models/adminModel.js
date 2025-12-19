@@ -40,7 +40,6 @@ const Admin = {
       throw error;
     }
   },
-
   async getPopularTours(limit = 10) {
     try {
       const query = `
