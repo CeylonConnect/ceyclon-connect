@@ -62,6 +62,7 @@ export default function Dashboard() {
     }).catch(() => {});
   }, [user?.user_id, user?.role, loadBookings]);
 
+  
   // Stats
   const stats = useMemo(() => {
     const total = bookings.length;
