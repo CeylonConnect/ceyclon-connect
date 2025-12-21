@@ -8,7 +8,7 @@ export default function CreateTour() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams(); // tour ID for editing
-
+  
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
