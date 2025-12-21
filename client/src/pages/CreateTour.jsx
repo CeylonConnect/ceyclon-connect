@@ -22,7 +22,7 @@ export default function CreateTour() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Fetch existing tour details if editing
+ 
   useEffect(() => {
     if (!id) return;
     setLoading(true);
