@@ -31,7 +31,6 @@ export default function GuideTours() {
     }
   };
 
-  
   useEffect(() => {
     fetchTours();
   }, [user?.user_id]);
