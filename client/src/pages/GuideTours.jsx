@@ -30,7 +30,6 @@ export default function GuideTours() {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchTours();
   }, [user?.user_id]);
