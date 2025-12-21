@@ -11,6 +11,7 @@ import EventsPanel from "../components/admin/EventsPanel";
 export default function AdminDashboard() {
   const [tab, setTab] = useState("badge");
 
+  
   const items = [
     { value: "users", label: "Users" },
     { value: "tours", label: "Tours" },
