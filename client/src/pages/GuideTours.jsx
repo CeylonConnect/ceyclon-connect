@@ -12,6 +12,7 @@ export default function GuideTours() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  
   const backendUrl = import.meta.env.VITE_API_BASE_URL;
 
   const fetchTours = async () => {
