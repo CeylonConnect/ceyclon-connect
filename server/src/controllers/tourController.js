@@ -7,7 +7,6 @@ export const createTour = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 export const getAllTours = async (req, res) => {
   try {
     const tours = await Tour.findAll();
