@@ -10,6 +10,7 @@ const generateToken = (user) => {
   });
 };
 
+
 // Register
 export const registerUser = async (req, res) => {
   try {
