@@ -32,7 +32,6 @@ export const getTourById = async (req, res) => {
   }
 };
 
-
 export const getToursByProvider = async (req, res) => {
   try {
     const tours = await Tour.getByProvider(req.params.providerId);
