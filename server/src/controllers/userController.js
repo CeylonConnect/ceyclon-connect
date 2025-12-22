@@ -35,6 +35,7 @@ export const loginUser = async (req, res) => {
   }
 };
 
+
 // Get All
 export const getAllUsers = async (req, res) => {
   try {
