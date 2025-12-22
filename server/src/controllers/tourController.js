@@ -63,7 +63,6 @@ export const deleteTour = async (req, res) => {
     res.status(500).json({ error: "Failed to delete tour" });
   }
 };
-
 export const getToursByDistrict = async (req, res) => {
   try {
     const data = await Tour.getToursByDistrict();
