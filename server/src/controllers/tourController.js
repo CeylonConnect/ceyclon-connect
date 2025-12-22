@@ -50,7 +50,6 @@ export const updateTour = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 export const deleteTour = async (req, res) => {
   try {
     const { id } = req.params;
