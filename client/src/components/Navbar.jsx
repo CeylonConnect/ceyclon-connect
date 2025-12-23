@@ -326,3 +326,90 @@ bg-clip-text text-transparent"
                     }`}
                   />
                 </button>
+
+                    <div className="relative">
+                  <button
+                    type="button"
+                    onClick={toggleAi}
+                    className="inline-flex items-center gap-2 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-black dark:text-neutral-200 dark:hover:bg-neutral-900"
+                    title="Open AI Assistant"
+                  >
+                    🤖 Assistant
+                  </button>
+
+                  <AIAssistant
+                    open={aiOpen}
+                    onClose={() => setAiOpen(false)}
+                    variant="popover"
+                  />
+                </div>
+
+                <div ref={notifRefDesktop} className="relative">
+                  <button
+                    type="button"
+                    onClick={toggleNotifications}
+                    className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-black dark:text-neutral-200 dark:hover:bg-neutral-900"
+                    title="Notifications"
+                    aria-label="Notifications"
+                  >
+                    <Bell className="h-5 w-5" />
+                    {unreadCount > 0 ? (
+                      <span className="absolute -right-1 -top-1 grid h-5 min-w-[20px] place-items-center rounded-full bg-rose-600 px-1 text-[11px] font-bold text-white">
+                        {unreadCount > 99 ? "99+" : unreadCount}
+                      </span>
+                    ) : null}
+                  </button>
+
+                  {notifOpen ? (
+                    <div className="absolute right-0 top-full mt-2 w-80 overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl dark:border-neutral-800 dark:bg-black">
+                      <div className="flex items-center justify-between px-4 py-3">
+                        <div className="text-sm font-bold text-neutral-900 dark:text-white">
+                          Notifications
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setNotifOpen(false);
+                            loadUnread();
+                          }}
+                          className="text-xs font-semibold text-neutral-600 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
+                        >
+                          Close
+                        </button>
+                      </div>
+
+                      <div className="max-h-80 overflow-auto">
+                        {notifications.length === 0 ? (
+                          <div className="px-4 pb-4 text-sm text-neutral-600 dark:text-neutral-300">
+                            No notifications.
+                          </div>
+                        ) : (
+                          notifications.map((n) => (
+                            <button
+                              key={n.notification_id}
+                              type="button"
+                              onClick={() => {
+                                const href = n.link || dashboardPath;
+                                setNotifOpen(false);
+                                navigate(href);
+                              }}
+                              className="w-full px-4 py-3 text-left hover:bg-neutral-50 dark:hover:bg-neutral-900"
+                            >
+                              <div className="text-sm font-semibold text-neutral-900 dark:text-white">
+                                {n.title}
+                              </div>
+                              {n.message ? (
+                                <div className="mt-0.5 text-xs text-neutral-600 dark:text-neutral-300">
+                                  {n.message}
+                                </div>
+                              ) : null}
+                              <div className="mt-1 text-[11px] text-neutral-500 dark:text-neutral-400">
+                                {n.created_at ? String(n.created_at).replace("T", " ") : ""}
+                              </div>
+                            </button>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
