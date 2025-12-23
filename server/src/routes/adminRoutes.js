@@ -16,4 +16,5 @@ router.get("/stats/bookings", getBookingStats);
 // Popular tours
 router.get("/stats/popular-tours", getPopularTours);
 
+
 export default router;
