@@ -29,6 +29,7 @@ router.get("/provider/:providerId", getBookingsByProvider);
 // ✅ Get booking by ID
 router.get("/:id", getBookingById);
 
+
 // ✅ Update booking status (accepted, rejected, completed, etc.)
 router.put("/:id/status", updateBookingStatus);
 
