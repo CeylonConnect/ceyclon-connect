@@ -685,3 +685,181 @@ bg-clip-text text-transparent"
         </div>
       </div>
 
+       {/* Mobile menu */}
+      <div
+        className={`lg:hidden overflow-hidden transition-[max-height,opacity] duration-300 ${
+          open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="mx-auto max-w-7xl px-4 pb-4">
+          <nav className="flex flex-col gap-1 rounded-2xl border border-neutral-200 bg-white p-2 shadow-sm dark:border-neutral-800 dark:bg-black">
+            <Link
+              to="/tours"
+              onClick={() => setOpen(false)}
+              className="rounded-lg px-3 py-2 text-neutral-700 hover:bg-neutral-50 dark:text-neutral-200 dark:hover:bg-neutral-900"
+            >
+              Discover Tours
+            </Link>
+            <Link
+              to="/events"
+              onClick={() => setOpen(false)}
+              className="rounded-lg px-3 py-2 text-neutral-700 hover:bg-neutral-50 dark:text-neutral-200 dark:hover:bg-neutral-900"
+            >
+              Events
+            </Link>
+            <Link
+              to="/about"
+              onClick={() => setOpen(false)}
+              className="rounded-lg px-3 py-2 text-neutral-700 hover:bg-neutral-50 dark:text-neutral-200 dark:hover:bg-neutral-900"
+            >
+              About
+            </Link>
+            <div className="mt-1 grid grid-cols-2 gap-2">
+              {isAuthenticated ? (
+                <>
+                  <button
+                    onClick={goToDashboard}
+                    className="rounded-lg border border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-50 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-900"
+                  >
+                    Dashboard
+                  </button>
+                  <button
+                    type="button"
+                    onClick={toggleAi}
+                    className="rounded-lg border border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-50 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-900"
+                  >
+                    AI Assistant
+                  </button>
+                  <button
+                    type="button"
+                    onClick={toggleTheme}
+                    role="switch"
+                    aria-checked={theme === "dark"}
+                    className="col-span-2 flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm font-semibold text-neutral-700 dark:border-neutral-800 dark:bg-black dark:text-neutral-200"
+                  >
+                    <span>{theme === "dark" ? "Dark mode" : "Light mode"}</span>
+                    <span
+                      className={`relative inline-flex h-7 w-12 items-center rounded-full border transition-colors ${
+                        theme === "dark"
+                          ? "border-neutral-800 bg-neutral-900"
+                          : "border-neutral-200 bg-neutral-100"
+                      }`}
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={`pointer-events-none absolute left-1.5 z-10 transition-opacity ${
+                          theme === "dark" ? "opacity-30" : "opacity-100"
+                        }`}
+                      >
+                        <SunIcon className="h-4.5 w-4.5 text-amber-400" />
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className={`pointer-events-none absolute right-1.5 z-10 transition-opacity ${
+                          theme === "dark" ? "opacity-100" : "opacity-30"
+                        }`}
+                      >
+                        <MoonIcon className="h-4.5 w-4.5 text-sky-500 dark:text-sky-300" />
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className={`absolute left-1 top-1 z-20 h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform dark:bg-neutral-100 ${
+                          theme === "dark" ? "translate-x-6" : "translate-x-0"
+                        }`}
+                      />
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={goToAccount}
+                    className="rounded-lg border border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-50 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-900"
+                  >
+                    Manage account
+                  </button>
+                  <button
+                    onClick={onLogoutClick}
+                    className="rounded-lg bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400 px-4 py-2 text-sm font-semibold text-white"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={toggleAi}
+                    className="rounded-lg border border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-50 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-900"
+                  >
+                    AI Assistant
+                  </button>
+                  <button
+                    type="button"
+                    onClick={toggleTheme}
+                    role="switch"
+                    aria-checked={theme === "dark"}
+                    className="col-span-2 flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm font-semibold text-neutral-700 dark:border-neutral-800 dark:bg-black dark:text-neutral-200"
+                  >
+                    <span>{theme === "dark" ? "Dark mode" : "Light mode"}</span>
+                    <span
+                      className={`relative inline-flex h-7 w-12 items-center rounded-full border transition-colors ${
+                        theme === "dark"
+                          ? "border-neutral-800 bg-neutral-900"
+                          : "border-neutral-200 bg-neutral-100"
+                      }`}
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={`pointer-events-none absolute left-1.5 z-10 transition-opacity ${
+                          theme === "dark" ? "opacity-30" : "opacity-100"
+                        }`}
+                      >
+                        <SunIcon className="h-4.5 w-4.5 text-amber-400" />
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className={`pointer-events-none absolute right-1.5 z-10 transition-opacity ${
+                          theme === "dark" ? "opacity-100" : "opacity-30"
+                        }`}
+                      >
+                        <MoonIcon className="h-4.5 w-4.5 text-sky-500 dark:text-sky-300" />
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className={`absolute left-1 top-1 z-20 h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform dark:bg-neutral-100 ${
+                          theme === "dark" ? "translate-x-6" : "translate-x-0"
+                        }`}
+                      />
+                    </span>
+                  </button>
+                  <button
+                    onClick={goToLogin}
+                    className="rounded-lg border border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-50 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-900"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={goToSignup}
+                    className="rounded-lg bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400 px-4 py-2 text-sm font-semibold text-white"
+                  >
+                    Sign Up
+                  </button>
+                </>
+              )}
+            </div>
+          </nav>
+        </div>
+      </div>
+
+      {/* Mobile chat: open below navbar */}
+      <div className="lg:hidden">
+        <AIAssistant
+          open={aiOpen}
+          onClose={() => setAiOpen(false)}
+          variant="popover"
+        />
+      </div>
+    </header>
+  );
+}
+
+
