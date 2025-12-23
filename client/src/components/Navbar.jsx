@@ -206,3 +206,123 @@ export default function Navbar({
     );
     setUnreadCount(0);
   };
+
+const toggleNotifications = () => {
+    if (notifOpen) {
+      setNotifOpen(false);
+      return;
+    }
+    openNotifications();
+  };
+
+  const goToAccount = () => {
+    setOpen(false);
+    setAiOpen(false);
+    setProfileOpen(false);
+    navigate("/account");
+  };
+
+  useEffect(() => {
+    const onDocDown = (e) => {
+      const el = profileRef.current;
+      if (!el) return;
+      if (profileOpen && !el.contains(e.target)) setProfileOpen(false);
+
+      const inNotif =
+        (notifRefDesktop.current && notifRefDesktop.current.contains(e.target)) ||
+        (notifRefMobile.current && notifRefMobile.current.contains(e.target));
+      if (notifOpen && !inNotif) setNotifOpen(false);
+    };
+    document.addEventListener("mousedown", onDocDown);
+    return () => document.removeEventListener("mousedown", onDocDown);
+  }, [profileOpen, notifOpen]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setUnreadCount(0);
+      setNotifications([]);
+      return;
+    }
+    loadUnread();
+
+    const interval = window.setInterval(() => {
+      loadUnread();
+    }, 15000);
+
+    return () => window.clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, user?.user_id, user?.id]);
+
+  return (
+    <header
+      className={`sticky top-0 z-50 w-full ${
+        elevated
+          ? "bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-md shadow-black/5 ring-1 ring-black/5 dark:bg-black/85 dark:supports-[backdrop-filter]:bg-black/70 dark:shadow-black/20 dark:ring-white/10"
+          : "bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:bg-black/80 dark:supports-[backdrop-filter]:bg-black/60 dark:ring-1 dark:ring-white/10"
+      }`}
+    >
+      <div className="mx-auto mr-14 ml-14 max-w-full px-1">
+        <div className="flex h-16 items-center justify-between">
+          {/* Brand */}
+          <Link
+            to="/"
+            className="text-xl sm:text-3xl font-extrabold mb-4 sm:mb-2 select-none 
+bg-gradient-to-r from-orange-600 via-yellow-500 to-teal-600 
+bg-clip-text text-transparent"
+          >
+            CeyloneConnect
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="hidden lg:flex items-center gap-1">
+            {/* {isAuthenticated ? (
+              <NavLink to={dashboardPath}>Dashboard</NavLink>
+            ) : null} */}
+            <NavLink to="/tours">Discover Tours</NavLink>
+            <NavLink to="/events">Events</NavLink>
+            <NavLink to="/about">About</NavLink>
+          </nav>
+
+          {/* Desktop actions */}
+          <div className="hidden lg:flex items-center gap-5">
+            {isAuthenticated ? (
+              <>
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  role="switch"
+                  aria-checked={theme === "dark"}
+                  title={
+                    theme === "dark"
+                      ? "Switch to light mode"
+                      : "Switch to dark mode"
+                  }
+                  className={`relative inline-flex h-9 w-14 items-center rounded-full border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/40 dark:focus-visible:ring-orange-300/30 ${
+                    theme === "dark"
+                      ? "border-neutral-800 bg-neutral-900"
+                      : "border-neutral-200 bg-neutral-100"
+                  }`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className={`pointer-events-none absolute left-2 z-10 transition-opacity ${
+                      theme === "dark" ? "opacity-100" : "opacity-100"
+                    }`}
+                  >
+                    <SunIcon className="h-4 w-4 text-yellow-500 dark:text-yellow-500" />
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className={`pointer-events-none absolute right-1 bottom-1 z-10 transition-opacity ${
+                      theme === "dark" ? "opacity-100" : "opacity-100"
+                    }`}
+                  >
+                    <MoonIcon className="h-6 w-5 text-sky-500 dark:text-sky-300" />
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className={`absolute left-1 top-1 z-20 h-7 w-7 transform rounded-full bg-white shadow-sm transition-transform dark:bg-neutral-100 ${
+                      theme === "dark" ? "translate-x-6" : "translate-x-0"
+                    }`}
+                  />
+                </button>
