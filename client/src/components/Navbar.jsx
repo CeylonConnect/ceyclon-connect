@@ -534,3 +534,65 @@ bg-clip-text text-transparent"
                     }`}
                   />
                 </button>
+
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={toggleAi}
+                    className="rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-black dark:text-neutral-200 dark:hover:bg-neutral-900"
+                    title="Open AI Assistant"
+                  >
+                    🤖 Assistant
+                  </button>
+
+                  <AIAssistant
+                    open={aiOpen}
+                    onClose={() => setAiOpen(false)}
+                    variant="popover"
+                  />
+                </div>
+                <button
+                  onClick={goToLogin}
+                  className="rounded-lg px-4 py-2 text-sm font-semibold text-neutral-700 hover:text-white hover:bg-blue-500 transition dark:text-neutral-200"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={goToSignup}
+                  className="rounded-xl bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-105 active:scale-95 transition"
+                >
+                  Sign Up
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Mobile actions */}
+          <div className="lg:hidden flex items-center gap-2">
+            <button
+              type="button"
+              onClick={toggleAi}
+              className="inline-flex h-10 items-center justify-center rounded-md px-3 text-sm font-semibold text-neutral-700 hover:bg-neutral-100 transition dark:text-neutral-200 dark:hover:bg-neutral-900"
+              aria-label="Open AI Assistant"
+              title="AI Assistant"
+            >
+              <span aria-hidden="true">🤖</span>
+              <span className="ml-2 hidden sm:inline">Assistant</span>
+            </button>
+
+            {isAuthenticated ? (
+              <div ref={notifRefMobile} className="relative">
+                <button
+                  type="button"
+                  onClick={toggleNotifications}
+                  className="relative inline-flex h-10 w-10 items-center justify-center rounded-md text-neutral-700 hover:bg-neutral-100 transition dark:text-neutral-200 dark:hover:bg-neutral-900"
+                  aria-label="Notifications"
+                  title="Notifications"
+                >
+                  <Bell className="h-5 w-5" />
+                  {unreadCount > 0 ? (
+                    <span className="absolute -right-1 -top-1 grid h-5 min-w-[20px] place-items-center rounded-full bg-rose-600 px-1 text-[11px] font-bold text-white">
+                      {unreadCount > 99 ? "99+" : unreadCount}
+                    </span>
+                  ) : null}
+                </button>
