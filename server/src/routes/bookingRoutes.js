@@ -33,4 +33,5 @@ router.get("/:id", getBookingById);
 // ✅ Update booking status (accepted, rejected, completed, etc.)
 router.put("/:id/status", updateBookingStatus);
 
+
 export default router;
