@@ -5,7 +5,6 @@ import {
   getPopularTours,
 } from "../controllers/adminController.js";
 
-
 const router = express.Router();
 // Platform stats
 router.get("/stats/platform", getPlatformStats);
