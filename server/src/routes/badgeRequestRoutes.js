@@ -20,6 +20,7 @@ router.get("/stats", getBadgeRequestStats);
 // Create a new badge request (user)
 router.post("/", createBadgeRequest);
 
+
 // Get a badge request by ID
 router.get("/:id", getBadgeRequestById);
 
