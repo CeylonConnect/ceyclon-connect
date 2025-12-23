@@ -13,6 +13,7 @@ const router = express.Router();
 // ✅ Create booking
 router.post("/", createBooking);
 
+
 // ✅ Get all bookings (admin or filtered view)
 router.get("/", getAllBookings);
 
