@@ -16,6 +16,7 @@ router.get("/user/:userId", getUserBadgeRequests);
 // Get badge request stats (admin)
 router.get("/stats", getBadgeRequestStats);
 
+
 // Create a new badge request (user)
 router.post("/", createBadgeRequest);
 
