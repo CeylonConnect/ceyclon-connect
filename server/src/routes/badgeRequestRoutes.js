@@ -32,4 +32,5 @@ router.get("/", getAllBadgeRequests);
 // Update badge request status (admin)
 router.put("/:id/status", updateBadgeRequestStatus);
 
+
 export default router;
