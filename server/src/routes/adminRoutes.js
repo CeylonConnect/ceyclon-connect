@@ -9,6 +9,7 @@ import {
 const router = express.Router();
 // Platform stats
 router.get("/stats/platform", getPlatformStats);
+
 // Booking stats (optional timeframe: week, month, year)
 router.get("/stats/bookings", getBookingStats);
 // Popular tours
