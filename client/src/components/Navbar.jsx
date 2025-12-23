@@ -103,4 +103,106 @@ export default function Navbar({
     return "/dashboard";
   }, [user?.role]);
 
+ useEffect(() => {
+    const onScroll = () => setElevated(window.scrollY > 6);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const saved = localStorage.getItem("theme");
+    const next = saved === "dark" ? "dark" : "light";
+    setTheme(next);
+    document.documentElement.classList.toggle("dark", next === "dark");
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme((t) => {
+      const next = t === "dark" ? "light" : "dark";
+      try {
+        localStorage.setItem("theme", next);
+      } catch {
+        // ignore
+      }
+      if (typeof document !== "undefined") {
+        document.documentElement.classList.toggle("dark", next === "dark");
+      }
+      return next;
+    });
+  };
+
+  const goToLogin = () => {
+    const next = `${location.pathname}${location.search}`;
+    setOpen(false);
+    if (onLoginClick) return onLoginClick();
+    navigate(`/login?next=${encodeURIComponent(next)}`);
+  };
+
+  const goToSignup = () => {
+    const next = `${location.pathname}${location.search}`;
+    setOpen(false);
+    if (onSignupClick) return onSignupClick();
+    navigate(`/signup?next=${encodeURIComponent(next)}`);
+  };
+
+  const goToDashboard = () => {
+    setOpen(false);
+    // Always respect role-based dashboard routing when authenticated.
+    // Some pages still pass onDashboardClick={() => "/dashboard"}, which would break locals.
+    navigate(dashboardPath);
+  };
+
+  const onLogoutClick = () => {
+    setOpen(false);
+    setProfileOpen(false);
+    if (typeof logout === "function") return logout();
+    localStorage.removeItem("token");
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
+    navigate("/login", { replace: true });
+  };
+
+  const toggleAi = () => {
+    setAiOpen((s) => !s);
+    setProfileOpen(false);
+    setNotifOpen(false);
+    setOpen(false);
+  };
+
+  const loadUnread = async () => {
+    try {
+      const res = await getUnreadNotificationCount();
+      setUnreadCount(Number(res?.unread_count || 0));
+    } catch {
+      // ignore
+    }
+  };
+
+  const loadList = async () => {
+    try {
+      const list = await getNotifications({ limit: 10, offset: 0 });
+      setNotifications(Array.isArray(list) ? list : []);
+    } catch {
+      setNotifications([]);
+    }
+  };
+
+  const openNotifications = async () => {
+    setNotifOpen(true);
+    setProfileOpen(false);
+    setAiOpen(false);
+    setOpen(false);
+    await loadList();
+    try {
+      await markAllNotificationsRead();
+    } catch {
+      // ignore
+    }
+    // Optimistically update local state
+    setNotifications((prev) =>
+      (Array.isArray(prev) ? prev : []).map((n) => ({ ...n, is_read: true }))
+    );
+    setUnreadCount(0);
+  };
