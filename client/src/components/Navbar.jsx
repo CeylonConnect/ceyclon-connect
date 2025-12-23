@@ -413,3 +413,124 @@ bg-clip-text text-transparent"
                     </div>
                   ) : null}
                 </div>
+
+                 {/* <button
+                  onClick={goToDashboard}
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-neutral-700 hover:text-white hover:bg-green-500 hover:transition dark:text-neutral-200"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  Dashboard
+                </button> */}
+
+                <div
+                  ref={profileRef}
+                  className="relative"
+                  onMouseEnter={() => setProfileOpen(true)}
+                  onMouseLeave={onProfileMouseLeave}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setProfileOpen((s) => !s)}
+                    className="grid h-10 w-10 place-items-center rounded-full bg-white ring-2 ring-green-500 ring-offset-2 ring-offset-white hover:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 dark:bg-black dark:ring-offset-black"
+                    title="Account"
+                  >
+                    {user?.avatar ? (
+                      <img
+                        src={user.avatar}
+                        alt="Profile"
+                        className="h-full w-full rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="grid h-full w-full place-items-center rounded-full bg-neutral-900 text-xs font-bold text-white">
+                        {String(user?.firstName || user?.email || "U")
+                          .trim()
+                          .slice(0, 1)
+                          .toUpperCase()}
+                      </div>
+                    )}
+                  </button>
+
+                  {profileOpen ? (
+                    <div className="absolute right-0 top-full mt-0 w-52 overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl dark:border-neutral-800 dark:bg-black">
+                      <button
+                        type="button"
+                        onClick={goToDashboard}
+                        className="flex items-center gap-3 w-full px-4 py-3 text-left text-sm font-semibold text-neutral-800 hover:bg-neutral-300 dark:text-neutral-200 dark:hover:bg-neutral-700"
+                      >
+                        <LayoutDashboard className="h-4 w-4" />
+                        Dashboard
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={goToAccount}
+                        className="flex items-center gap-3 w-full px-4 py-3 text-left text-sm font-semibold text-neutral-800 hover:bg-neutral-300 dark:text-neutral-200 dark:hover:bg-neutral-700"
+                      >
+                        <User className="h-4 w-4" />
+                        Manage account
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={onLogoutClick}
+                        className="flex items-center gap-3 w-full px-4 py-3 text-left text-sm font-semibold text-rose-700 hover:bg-rose-300 dark:hover:bg-rose-700/30"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Logout
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  role="switch"
+                  aria-checked={theme === "dark"}
+                  title={
+                    theme === "dark"
+                      ? "Switch to light mode"
+                      : "Switch to dark mode"
+                  }
+                  className={`relative inline-flex h-9 w-14 items-center rounded-full border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/40 dark:focus-visible:ring-orange-300/30 ${
+                    theme === "dark"
+                      ? "border-neutral-800 bg-neutral-900"
+                      : "border-neutral-200 bg-neutral-100"
+                  }`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className={`pointer-events-none absolute left-2 z-10 transition-opacity ${
+                      theme === "dark" ? "opacity-100" : "opacity-100"
+                    }`}
+                  >
+                    <SunIcon className="h-4 w-4 text-yellow-500" />
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className={`pointer-events-none absolute right-1 bottom-1 z-10 transition-opacity ${
+                      theme === "dark" ? "opacity-100" : "opacity-100"
+                    }`}
+                  >
+                    <MoonIcon className="h-6 w-5 text-sky-500 dark:text-sky-300" />
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className={`absolute left-1 top-1 z-20 h-7 w-7 transform rounded-full bg-white shadow-sm transition-transform dark:bg-neutral-100 ${
+                      theme === "dark" ? "translate-x-6" : "translate-x-0"
+                    }`}
+                  />
+                </button>
