@@ -17,6 +17,7 @@ router.post("/", createBooking);
 // ✅ Get all bookings (admin or filtered view)
 router.get("/", getAllBookings);
 
+
 // ✅ Get bookings by tourist
 router.get("/tourist/:touristId", getBookingsByTourist);
 
