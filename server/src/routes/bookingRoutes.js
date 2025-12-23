@@ -25,6 +25,7 @@ router.get("/tourist/:touristId", getBookingsByTourist);
 // ✅ Get bookings by provider
 router.get("/provider/:providerId", getBookingsByProvider);
 
+
 // ✅ Get booking by ID
 router.get("/:id", getBookingById);
 
