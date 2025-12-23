@@ -12,6 +12,7 @@ const router = express.Router();
 // Get all badge requests of a user
 router.get("/user/:userId", getUserBadgeRequests);
 
+
 // Get badge request stats (admin)
 router.get("/stats", getBadgeRequestStats);
 
