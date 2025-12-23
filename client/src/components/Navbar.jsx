@@ -596,3 +596,92 @@ bg-clip-text text-transparent"
                     </span>
                   ) : null}
                 </button>
+
+                {notifOpen ? (
+                  <div className="absolute right-0 top-full mt-2 w-80 overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl dark:border-neutral-800 dark:bg-black">
+                    <div className="flex items-center justify-between px-4 py-3">
+                      <div className="text-sm font-bold text-neutral-900 dark:text-white">
+                        Notifications
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setNotifOpen(false);
+                          loadUnread();
+                        }}
+                        className="text-xs font-semibold text-neutral-600 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
+                      >
+                        Close
+                      </button>
+                    </div>
+
+                    <div className="max-h-80 overflow-auto">
+                      {notifications.length === 0 ? (
+                        <div className="px-4 pb-4 text-sm text-neutral-600 dark:text-neutral-300">
+                          No notifications.
+                        </div>
+                      ) : (
+                        notifications.map((n) => (
+                          <button
+                            key={n.notification_id}
+                            type="button"
+                            onClick={() => {
+                              const href = n.link || dashboardPath;
+                              setNotifOpen(false);
+                              navigate(href);
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-neutral-50 dark:hover:bg-neutral-900"
+                          >
+                            <div className="text-sm font-semibold text-neutral-900 dark:text-white">
+                              {n.title}
+                            </div>
+                            {n.message ? (
+                              <div className="mt-0.5 text-xs text-neutral-600 dark:text-neutral-300">
+                                {n.message}
+                              </div>
+                            ) : null}
+                            <div className="mt-1 text-[11px] text-neutral-500 dark:text-neutral-400">
+                              {n.created_at ? String(n.created_at).replace("T", " ") : ""}
+                            </div>
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+
+            <button
+              className="inline-flex items-center justify-center rounded-md p-2 text-neutral-700 hover:bg-neutral-100 transition dark:text-neutral-200 dark:hover:bg-neutral-900"
+              onClick={() => setOpen((s) => !s)}
+              aria-label="Toggle menu"
+            >
+              <svg
+                className={`transition-transform ${open ? "rotate-90" : ""}`}
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                {open ? (
+                  <path
+                    d="M6 18L18 6M6 6l12 12"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                ) : (
+                  <path
+                    d="M4 6h16M4 12h16M4 18h16"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
