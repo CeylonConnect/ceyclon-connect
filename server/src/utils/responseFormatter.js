@@ -11,6 +11,7 @@
  * @param {string} message - Success message
  * @param {number} statusCode - HTTP status code
  */
+
 export function sendSuccess(res, data = null, message = 'Success', statusCode = 200) {
   return res.status(statusCode).json({
     success: true,
