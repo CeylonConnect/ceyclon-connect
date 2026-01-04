@@ -28,6 +28,7 @@ export function sendSuccess(res, data = null, message = 'Success', statusCode = 
  * @param {number} statusCode - HTTP status code
  * @param {any} errors - Validation errors or details
  */
+
 export function sendError(res, message = 'Error', statusCode = 500, errors = null) {
   return res.status(statusCode).json({
     success: false,
