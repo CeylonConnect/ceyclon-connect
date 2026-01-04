@@ -137,6 +137,7 @@ export const PAGINATION = {
   MAX_LIMIT: 100,
 };
 
+
 export default {
   HTTP_STATUS,
   ERROR_MESSAGES,
