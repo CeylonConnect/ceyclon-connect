@@ -22,6 +22,7 @@ export function isValidEmail(email) {
 
 export function validatePassword(password) {
   const errors = [];
+
   
   if (!password || password.length < 8) {
     errors.push('Password must be at least 8 characters long');
