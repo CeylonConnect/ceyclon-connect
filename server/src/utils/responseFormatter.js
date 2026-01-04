@@ -47,6 +47,7 @@ export function sendError(res, message = 'Error', statusCode = 500, errors = nul
  * @param {number} total - Total number of items
  * @param {string} message - Success message
  */
+
 export function sendPaginated(res, data, page, limit, total, message = 'Success') {
   const totalPages = Math.ceil(total / limit);
   
