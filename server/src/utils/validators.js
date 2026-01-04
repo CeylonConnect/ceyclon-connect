@@ -19,6 +19,7 @@ export function isValidEmail(email) {
  * @param {string} password - Password to validate
  * @returns {object} Validation result
  */
+
 export function validatePassword(password) {
   const errors = [];
   
