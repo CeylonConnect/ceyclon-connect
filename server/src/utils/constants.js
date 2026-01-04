@@ -68,6 +68,8 @@ export const ERROR_MESSAGES = {
 /**
  * Success Messages
  */
+
+
 export const SUCCESS_MESSAGES = {
   USER_CREATED: 'User registered successfully',
   USER_UPDATED: 'User updated successfully',
