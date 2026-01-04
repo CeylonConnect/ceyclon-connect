@@ -51,6 +51,7 @@ export function validatePassword(password) {
  * @param {string} phone - Phone number
  * @returns {boolean} True if valid
  */
+
 export function isValidPhone(phone) {
   const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/;
   return phoneRegex.test(phone);
