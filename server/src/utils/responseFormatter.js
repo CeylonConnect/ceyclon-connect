@@ -73,6 +73,7 @@ export function sendPaginated(res, data, page, limit, total, message = 'Success'
  * @param {any} data - Created resource data
  * @param {string} message - Success message
  */
+
 export function sendCreated(res, data, message = 'Resource created successfully') {
   return sendSuccess(res, data, message, 201);
 }
