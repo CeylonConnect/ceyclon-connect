@@ -137,6 +137,7 @@ export function sanitizeString(str) {
  * @param {string} id - Object ID
  * @returns {boolean} True if valid
  */
+
 export function isValidObjectId(id) {
   const objectIdRegex = /^[0-9a-fA-F]{24}$/;
   return objectIdRegex.test(id);
