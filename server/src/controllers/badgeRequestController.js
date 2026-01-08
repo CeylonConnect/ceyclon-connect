@@ -124,13 +124,58 @@ export const getAllBadgeRequests = async (req, res) => {
   }
 };
 
-// Get badge request stats
-export const getBadgeRequestStats = async (req, res) => {
+/// Update badge request status (admin)
+export const updateBadgeRequestStatus = async (req, res) => {
   try {
-    const stats = await BadgeRequest.getStats();
-    res.json(stats);
+    const { id } = req.params;
+    const { status, adminNotes } = req.body;
+    const reviewedBy = req.user?.user_id;
+    if (!reviewedBy) return res.status(401).json({ error: "Unauthorized" });
+
+    const normalizedStatus = String(status || "")
+      .toLowerCase()
+      .trim();
+    if (!["approved", "rejected", "pending"].includes(normalizedStatus)) {
+      return res.status(400).json({ error: "Invalid status" });
+    }
+
+    const updatedRequest = await BadgeRequest.updateStatus(
+      id,
+      normalizedStatus,
+      reviewedBy,
+      adminNotes
+    );
+
+    // Local notification: admin updated badge request
+    try {
+      const targetUserId = Number(updatedRequest?.user_id);
+      if (Number.isFinite(targetUserId)) {
+        await Notification.create({
+          user_id: targetUserId,
+          type: "badge_request_updated",
+          title: "Badge request updated",
+          message: `Your badge request is now: ${normalizedStatus}.`,
+          link: "/local",
+          metadata: { request_id: updatedRequest?.request_id },
+        });
+      }
+    } catch {
+      // ignore
+    }
+
+    if (updatedRequest?.user_id) {
+      if (normalizedStatus === "approved") {
+        await User.updateBadgeStatus(updatedRequest.user_id, "verified");
+      } else if (normalizedStatus === "rejected") {
+        await User.updateBadgeStatus(updatedRequest.user_id, "none");
+      } else if (normalizedStatus === "pending") {
+        await User.updateBadgeStatus(updatedRequest.user_id, "pending");
+      }
+    }
+
+    res.json(updatedRequest);
   } catch (error) {
-    console.error("Error getting badge request stats:", error);
+    console.error("Error updating badge request:", error);
     res.status(500).json({ error: error.message });
   }
 };
