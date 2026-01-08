@@ -69,3 +69,14 @@ export const setUserBlocked = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Admin: unblock all users
+export const unblockAllUsers = async (req, res) => {
+  try {
+    const count = await User.unblockAllUsers();
+    res.json({ message: "All users unblocked", updated: count });
+  } catch (error) {
+    console.error("Error unblocking all users:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
