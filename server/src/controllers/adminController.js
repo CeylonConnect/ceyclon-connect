@@ -48,3 +48,24 @@ export const getUsers = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Admin: block/unblock user (blocked=true => is_verified=false)
+export const setUserBlocked = async (req, res) => {
+  try {
+    const userId = Number(req.params.id);
+    if (!Number.isFinite(userId)) {
+      return res.status(400).json({ error: "Invalid user id" });
+    }
+
+    const blocked = Boolean(req.body?.blocked);
+    const updated = await User.setIsVerified(userId, !blocked);
+    if (!updated) return res.status(404).json({ error: "User not found" });
+    res.json({
+      message: blocked ? "User blocked" : "User unblocked",
+      user: updated,
+    });
+  } catch (error) {
+    console.error("Error updating user block status:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
