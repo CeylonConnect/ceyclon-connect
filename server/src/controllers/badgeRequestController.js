@@ -99,14 +99,15 @@ export const getUserBadgeRequests = async (req, res) => {
   }
 };
 
-// Get all badge requests (admin)
-export const getAllBadgeRequests = async (req, res) => {
+// Get current user's badge requests
+export const getMyBadgeRequests = async (req, res) => {
   try {
-    const { status } = req.query; // optional filter by status
-    const requests = await BadgeRequest.getAllRequests(status);
+    const userId = req.user?.user_id;
+    if (!userId) return res.status(401).json({ error: "Unauthorized" });
+    const requests = await BadgeRequest.findByUserId(userId);
     res.json(requests);
   } catch (error) {
-    console.error("Error getting all badge requests:", error);
+    console.error("Error getting my badge requests:", error);
     res.status(500).json({ error: error.message });
   }
 };
