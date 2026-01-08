@@ -48,10 +48,18 @@ export default function StatsHeader() {
         <SummaryStat
           label="Total Users"
           value={loading ? "—" : stats?.totalUsers ?? 0}
-          sub={loading ? "" : `${stats?.tourists ?? 0} tourists, ${stats?.locals ?? 0} locals`}
+          sub={
+            loading
+              ? ""
+              : `${stats?.tourists ?? 0} tourists, ${stats?.locals ?? 0} locals`
+          }
           icon={<span>👥</span>}
         />
-        <SummaryStat label="Total Tours" value={loading ? "—" : stats?.totalTours ?? 0} icon={<span>📍</span>} />
+        <SummaryStat
+          label="Total Tours"
+          value={loading ? "—" : stats?.totalTours ?? 0}
+          icon={<span>📍</span>}
+        />
         <SummaryStat
           label="Total Bookings"
           value={loading ? "—" : stats?.totalBookings ?? 0}
@@ -60,7 +68,7 @@ export default function StatsHeader() {
         />
         <SummaryStat
           label="Revenue"
-          value={loading ? "—" : `$${stats?.revenue ?? 0}`}
+          value={loading ? "—" : `Rs. ${stats?.revenue ?? 0}`}
           sub="Total platform revenue"
           icon={<span>💲</span>}
         />
