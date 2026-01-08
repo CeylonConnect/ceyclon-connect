@@ -1,28 +1,38 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { createEvent, deleteEvent, getAllEvents, updateEvent } from "../../api/event";
+import {
+  createEvent,
+  deleteEvent,
+  getAllEvents,
+  updateEvent,
+} from "../../api/event";
 import Reveal from "../motion/Reveal";
 import EventFormModal from "./EventFormModel";
 
 function EventRow({ ev, onEdit, onDelete }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+    <div className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-800 dark:bg-black">
       <img
         src={ev.image || "https://via.placeholder.com/160x100?text=Event"}
         alt={ev.title}
         className="h-16 w-24 rounded-lg object-cover"
       />
       <div className="flex-1">
-        <div className="text-sm text-neutral-500">{ev.type}</div>
-        <div className="text-base font-semibold text-neutral-900">{ev.title}</div>
-        <div className="text-sm text-neutral-600">
-          {ev.location} • {ev.startDate ? new Date(ev.startDate).toLocaleDateString() : "-"}{" "}
+        <div className="text-sm text-neutral-500 dark:text-neutral-400">
+          {ev.type}
+        </div>
+        <div className="text-base font-semibold text-neutral-900 dark:text-white">
+          {ev.title}
+        </div>
+        <div className="text-sm text-neutral-600 dark:text-neutral-300">
+          {ev.location} •{" "}
+          {ev.startDate ? new Date(ev.startDate).toLocaleDateString() : "-"}{" "}
           {ev.time ? `• ${ev.time}` : ""}
         </div>
       </div>
       <div className="flex gap-2">
         <button
           onClick={onEdit}
-          className="rounded-lg border border-neutral-200 px-3 py-1.5 text-sm font-semibold text-neutral-700 hover:bg-neutral-50"
+          className="rounded-lg border border-neutral-200 px-3 py-1.5 text-sm font-semibold text-neutral-700 hover:bg-neutral-50 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-900"
         >
           Edit
         </button>
@@ -99,13 +109,15 @@ export default function EventsPanel() {
   return (
     <div className="mt-6">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-xl font-extrabold text-neutral-900">Events</h3>
+        <h3 className="text-xl font-extrabold text-neutral-900 dark:text-white">
+          Events
+        </h3>
         <div className="flex items-center gap-2">
           <input
             placeholder="Search events..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-teal-400/40"
+            className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-teal-400/40 dark:border-neutral-800 dark:bg-black dark:text-neutral-200"
           />
           <button
             onClick={() => {
@@ -120,9 +132,13 @@ export default function EventsPanel() {
       </div>
 
       {loading ? (
-        <div className="rounded-2xl border border-neutral-200 bg-white p-6 text-neutral-500">Loading...</div>
+        <div className="rounded-2xl border border-neutral-200 bg-white p-6 text-neutral-500 dark:border-neutral-800 dark:bg-black dark:text-neutral-300">
+          Loading...
+        </div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-2xl border border-neutral-200 bg-white p-6 text-neutral-500">No events found.</div>
+        <div className="rounded-2xl border border-neutral-200 bg-white p-6 text-neutral-500 dark:border-neutral-800 dark:bg-black dark:text-neutral-300">
+          No events found.
+        </div>
       ) : (
         <div className="space-y-3">
           {filtered.map((ev) => (
