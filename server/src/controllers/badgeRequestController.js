@@ -112,20 +112,14 @@ export const getMyBadgeRequests = async (req, res) => {
   }
 };
 
-// Update badge request status (admin)
-export const updateBadgeRequestStatus = async (req, res) => {
+// Get all badge requests (admin)
+export const getAllBadgeRequests = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { status, reviewedBy, adminNotes } = req.body;
-    const updatedRequest = await BadgeRequest.updateStatus(
-      id,
-      status,
-      reviewedBy,
-      adminNotes
-    );
-    res.json(updatedRequest);
+    const { status } = req.query; // optional filter by status
+    const requests = await BadgeRequest.getAllRequests(status);
+    res.json(requests);
   } catch (error) {
-    console.error("Error updating badge request:", error);
+    console.error("Error getting all badge requests:", error);
     res.status(500).json({ error: error.message });
   }
 };
