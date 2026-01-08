@@ -1,4 +1,6 @@
 import BadgeRequest from "../models/badgeModel.js";
+import User from "../models/userModel.js";
+import Notification from "../models/notificationModel.js";
 
 // Create a new badge request
 export const createBadgeRequest = async (req, res) => {
