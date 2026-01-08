@@ -19,41 +19,51 @@ export default function TourFilters({
 
   return (
     <div className="mx-auto max-w-6xl px-4">
-      <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+      <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-800 dark:bg-black">
         <div className="grid gap-4 md:grid-cols-5">
           {/* District */}
           <div className="md:col-span-2">
-            <label className="mb-1 block text-xs font-medium text-neutral-600">District</label>
+            <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-300">
+              District
+            </label>
             <select
               value={values.district}
               onChange={(e) => set("district", e.target.value)}
-              className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800 outline-none focus:ring-2 focus:ring-orange-400/40"
+              className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800 outline-none focus:ring-2 focus:ring-orange-400/40 dark:border-neutral-800 dark:bg-black dark:text-neutral-100"
             >
               <option value="">All districts</option>
               {districts.map((d) => (
-                <option key={d} value={d}>{d}</option>
+                <option key={d} value={d}>
+                  {d}
+                </option>
               ))}
             </select>
           </div>
 
           {/* Provider */}
           <div className="md:col-span-2">
-            <label className="mb-1 block text-xs font-medium text-neutral-600">Provider</label>
+            <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-300">
+              Provider
+            </label>
             <select
               value={values.provider}
               onChange={(e) => set("provider", e.target.value)}
-              className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800 outline-none focus:ring-2 focus:ring-orange-400/40"
+              className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800 outline-none focus:ring-2 focus:ring-orange-400/40 dark:border-neutral-800 dark:bg-black dark:text-neutral-100"
             >
               <option value="">All providers</option>
               {providers.map((p) => (
-                <option key={p} value={p}>{p}</option>
+                <option key={p} value={p}>
+                  {p}
+                </option>
               ))}
             </select>
           </div>
 
           {/* Price range */}
           <div className="md:col-span-1">
-            <label className="mb-1 block text-xs font-medium text-neutral-600">Price range (USD)</label>
+            <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-300">
+              Price range (Rs.)
+            </label>
             <div className="flex items-center gap-2">
               <input
                 type="number"
@@ -62,9 +72,9 @@ export default function TourFilters({
                 placeholder="Min"
                 value={values.minPrice}
                 onChange={(e) => set("minPrice", e.target.value)}
-                className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800 outline-none focus:ring-2 focus:ring-orange-400/40"
+                className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800 outline-none focus:ring-2 focus:ring-orange-400/40 dark:border-neutral-800 dark:bg-black dark:text-neutral-100"
               />
-              <span className="text-neutral-400">–</span>
+              <span className="text-neutral-400 dark:text-neutral-500">–</span>
               <input
                 type="number"
                 inputMode="numeric"
@@ -72,22 +82,22 @@ export default function TourFilters({
                 placeholder="Max"
                 value={values.maxPrice}
                 onChange={(e) => set("maxPrice", e.target.value)}
-                className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800 outline-none focus:ring-2 focus:ring-orange-400/40"
+                className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800 outline-none focus:ring-2 focus:ring-orange-400/40 dark:border-neutral-800 dark:bg-black dark:text-neutral-100"
               />
             </div>
           </div>
-
-          
         </div>
 
         {/* Categories (multi-select pills) */}
         <div className="mt-4">
           <div className="mb-2 flex items-center justify-between">
-            <label className="block text-xs font-medium text-neutral-600">Categories</label>
+            <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300">
+              Categories
+            </label>
             <button
               type="button"
               onClick={() => set("categories", [])}
-              className="text-xs font-semibold text-neutral-600 hover:text-neutral-800"
+              className="text-xs font-semibold text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-white"
             >
               Clear
             </button>
@@ -104,7 +114,7 @@ export default function TourFilters({
                     "rounded-full px-3 py-1.5 text-sm transition border",
                     active
                       ? "text-neutral-800 border-transparent bg-gradient-to-r from-orange-100 to-yellow-100"
-                      : "text-neutral-700 border-neutral-200 hover:bg-neutral-50",
+                      : "text-neutral-700 border-neutral-200 hover:bg-neutral-50 dark:text-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-900",
                   ].join(" ")}
                 >
                   {cat}
@@ -118,7 +128,7 @@ export default function TourFilters({
           <button
             type="button"
             onClick={onReset}
-            className="rounded-xl border border-neutral-200 px-3 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-50"
+            className="rounded-xl border border-neutral-200 px-3 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-50 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-900"
           >
             Reset
           </button>
@@ -130,7 +140,6 @@ export default function TourFilters({
             Apply
           </button>
         </div>
-        
       </div>
     </div>
   );
