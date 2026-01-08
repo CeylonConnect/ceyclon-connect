@@ -65,7 +65,6 @@ export const createBadgeRequest = async (req, res) => {
   }
 };
 
-
 // Get a badge request by ID
 export const getBadgeRequestById = async (req, res) => {
   try {
@@ -84,6 +83,14 @@ export const getBadgeRequestById = async (req, res) => {
 export const getUserBadgeRequests = async (req, res) => {
   try {
     const { userId } = req.params;
+    const requesterId = req.user?.user_id;
+    const requesterRole = (req.user?.role || "").toString().toLowerCase();
+
+    if (!requesterId) return res.status(401).json({ error: "Unauthorized" });
+    if (requesterRole !== "admin" && Number(userId) !== Number(requesterId)) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
     const requests = await BadgeRequest.findByUserId(userId);
     res.json(requests);
   } catch (error) {
