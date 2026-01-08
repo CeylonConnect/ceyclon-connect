@@ -1,5 +1,6 @@
 
 import Admin from "../models/adminModel.js";
+import User from "../models/userModel.js";
 
 // Get overall platform stats
 export const getPlatformStats = async (req, res) => {
