@@ -179,3 +179,14 @@ export const updateBadgeRequestStatus = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Get badge request stats
+export const getBadgeRequestStats = async (req, res) => {
+  try {
+    const stats = await BadgeRequest.getStats();
+    res.json(stats);
+  } catch (error) {
+    console.error("Error getting badge request stats:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
