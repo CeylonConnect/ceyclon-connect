@@ -35,3 +35,16 @@ export const getPopularTours = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Admin: list users (optional filters: role, q)
+export const getUsers = async (req, res) => {
+  try {
+    const role = req.query?.role || null;
+    const q = req.query?.q || null;
+    const users = await User.getAllUsers(role, q);
+    res.json(users);
+  } catch (error) {
+    console.error("Error getting users:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
