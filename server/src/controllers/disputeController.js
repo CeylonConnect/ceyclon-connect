@@ -69,6 +69,18 @@ export const getDisputeById = async (req, res) => {
   try {
     const dispute = await Dispute.findById(req.params.id);
     if (!dispute) return res.status(404).json({ error: "Dispute not found" });
+
+    const userId = Number(req.user?.user_id);
+    const role = String(req.user?.role || "").toLowerCase();
+    const isAdmin = role === "admin";
+    const involved =
+      userId &&
+      (Number(dispute.complainant_id) === userId ||
+        Number(dispute.accused_id) === userId);
+
+    if (!isAdmin && !involved) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
     res.json(dispute);
   } catch (err) {
     res.status(500).json({ error: err.message });
