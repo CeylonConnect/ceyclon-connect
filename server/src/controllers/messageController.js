@@ -1,4 +1,14 @@
 import Message from "../models/messageModel.js";
+import pusher from "../config/pusher.js";
+import Notification from "../models/notificationModel.js";
+import User from "../models/userModel.js";
+
+function toConversationId(userA, userB) {
+  const a = Number(userA);
+  const b = Number(userB);
+  const parts = [a, b].sort((x, y) => x - y);
+  return `${parts[0]}_${parts[1]}`;
+}
 
 //Send a new message
 export const sendMessage = async (req, res) => {
