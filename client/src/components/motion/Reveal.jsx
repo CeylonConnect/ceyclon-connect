@@ -1,12 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
 
+/**
+ * Reveal
+ * Wrap any content to animate it when it scrolls into view.
+ * Uses Tailwind's existing animate-fade-in-up class from your config.
+ *
+ * Props:
+ * - as?: element tag (default 'div')
+ * - threshold?: IntersectionObserver threshold (default 0.18)
+ * - once?: animate only the first time in view (default true)
+ * - className?: extra classes
+ */
 export default function Reveal({
   as: Tag = "div",
   threshold = 0.18,
   once = true,
   className = "",
   children,
-})  {
+}) {
   const ref = useRef(null);
   const [show, setShow] = useState(false);
 
