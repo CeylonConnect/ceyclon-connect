@@ -89,8 +89,18 @@ export const getDisputeById = async (req, res) => {
 
 export const getAllDisputes = async (req, res) => {
   try {
+    // If this handler is mounted at /disputes/mine, return user-specific disputes.
+    if (req.path === "/mine") {
+      const userId = Number(req.user?.user_id);
+      if (!Number.isFinite(userId)) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+      const disputes = await Dispute.getMine(userId);
+      return res.json(disputes);
+    }
+
     const disputes = await Dispute.getAll(req.query);
-    res.json(disputes);
+    return res.json(disputes);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
