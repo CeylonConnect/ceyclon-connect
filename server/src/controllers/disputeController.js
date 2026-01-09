@@ -108,7 +108,36 @@ export const getAllDisputes = async (req, res) => {
 
 export const updateDispute = async (req, res) => {
   try {
+    const before = await Dispute.findById(req.params.id);
     const dispute = await Dispute.update(req.params.id, req.body);
+
+    // Tourist/local notification: dispute resolution/status update
+    try {
+      const complainantId = Number(before?.complainant_id);
+      const accusedId = Number(before?.accused_id);
+      const ids = [complainantId, accusedId].filter((n) => Number.isFinite(n));
+      const uniqueIds = Array.from(new Set(ids));
+
+      const status = String(dispute?.status || req.body?.status || "update")
+        .toLowerCase()
+        .trim();
+
+      await Promise.all(
+        uniqueIds.map(async (uid) => {
+          return Notification.create({
+            user_id: uid,
+            type: "dispute_updated",
+            title: "Dispute updated",
+            message: `Your dispute status is now: ${status}.`,
+            link: "/help-center",
+            metadata: { dispute_id: dispute?.dispute_id },
+          });
+        })
+      );
+    } catch {
+      // ignore
+    }
+
     res.json({
       message: "Message Update Successfully",
       dispute: dispute,
