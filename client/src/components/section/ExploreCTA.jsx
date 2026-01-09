@@ -33,13 +33,14 @@ function RevealBrowseButton() {
     </a>
   );
 }
+
 export default function ExploreCTA() {
   return (
     <section className="relative isolate">
       {/* Background image */}
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center"
-        style={{ backgroundImage: "url('/vite.svg')" }}
+        style={{ backgroundImage: "url('/Hero1.webp')" }}
       />
       {/* Gradient overlay */}
       <div className="absolute inset-0 -z-0 bg-gradient-to-r from-[#e86d39]/80 via-[#d88a3f]/60 to-[#179c93]/80" />
@@ -67,4 +68,3 @@ export default function ExploreCTA() {
     </section>
   );
 }
-
