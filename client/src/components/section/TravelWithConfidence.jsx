@@ -1,4 +1,3 @@
-
 import React from "react";
 
 const toneMap = {
@@ -48,7 +47,6 @@ const DEFAULT_FEATURES = [
       </svg>
     ),
   },
-
   {
     id: "community",
     title: "Community Support",
@@ -79,7 +77,7 @@ const DEFAULT_FEATURES = [
     ),
   },
 ];
-  
+
 function Feature({ item }) {
   const tone = toneMap[item.tone] ?? toneMap.orange;
   return (
@@ -118,4 +116,3 @@ export default function TravelWithConfidence({ features = DEFAULT_FEATURES }) {
     </section>
   );
 }
-
