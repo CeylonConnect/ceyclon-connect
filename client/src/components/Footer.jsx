@@ -7,7 +7,7 @@ function FooterLink({ href = "#", children, external = false }) {
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       className="footer-link relative inline-flex items-center text-[15px] text-neutral-600 transition 
-                 will-change-transform group"
+                 will-change-transform group dark:text-neutral-300"
     >
       <span
         className="relative z-10 bg-clip-text group-hover:text-transparent group-hover:animate-none
@@ -31,7 +31,7 @@ function SocialIcon({ href, label, children }) {
       href={href}
       aria-label={label}
       className="group inline-flex h-9 w-9 items-center justify-center rounded-md text-neutral-600 
-                 transition-transform duration-300 transform hover:scale-150 hover:text-orange-600"
+                 transition-transform duration-300 transform hover:scale-150 hover:text-orange-600 dark:text-neutral-300"
     >
       <span className="relative">{children}</span>
     </a>
@@ -42,7 +42,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-sand-50 border-t border-neutral-200/70">
+    <footer className="bg-sand-50 border-t border-neutral-200/70 dark:bg-black dark:border-neutral-800">
       <div className="mx-auto max-w-7xl px-4 py-14">
         <div className="grid gap-12 lg:grid-cols-4">
           <div>
@@ -56,7 +56,7 @@ bg-clip-text text-transparent"
                 CeyloneConnect
               </a>
             </div>
-            <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-neutral-600">
+            <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-neutral-600 dark:text-neutral-300">
               Connecting travelers with authentic Sri Lankan experiences through
               local guides.
             </p>
@@ -103,7 +103,9 @@ bg-clip-text text-transparent"
 
           {/* Explore */}
           <div>
-            <h4 className="text-lg font-semibold text-neutral-800">Explore</h4>
+            <h4 className="text-lg font-semibold text-neutral-800 dark:text-white">
+              Explore
+            </h4>
             <ul className="mt-5 space-y-3">
               <li>
                 <FooterLink href="/tours">Browse Tours</FooterLink>
@@ -122,7 +124,7 @@ bg-clip-text text-transparent"
 
           {/* For Guides */}
           <div>
-            <h4 className="text-lg font-semibold text-neutral-800">
+            <h4 className="text-lg font-semibold text-neutral-800 dark:text-white">
               For Guides
             </h4>
             <ul className="mt-5 space-y-3">
@@ -143,7 +145,9 @@ bg-clip-text text-transparent"
 
           {/* Support */}
           <div>
-            <h4 className="text-lg font-semibold text-neutral-800">Support</h4>
+            <h4 className="text-lg font-semibold text-neutral-800 dark:text-white">
+              Support
+            </h4>
             <ul className="mt-5 space-y-3">
               <li>
                 <FooterLink href="mailto:support@ceylonconnect.lk" external>
@@ -177,19 +181,16 @@ bg-clip-text text-transparent"
                 </FooterLink>
               </li>
               <li>
-                <FooterLink href="/help">Help Center</FooterLink>
-              </li>
-              <li>
-                <FooterLink href="/safety">Safety</FooterLink>
+                <FooterLink href="/help-center">Help Center</FooterLink>
               </li>
             </ul>
           </div>
         </div>
 
-        <hr className="my-10 border-neutral-200" />
+        <hr className="my-10 border-neutral-200 dark:border-neutral-800" />
 
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-          <div className="text-sm text-neutral-600">
+          <div className="text-sm text-neutral-600 dark:text-neutral-300">
             © {year} CeylonConnect. All rights reserved.
           </div>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
