@@ -13,8 +13,78 @@ function toConversationId(userA, userB) {
 //Send a new message
 export const sendMessage = async (req, res) => {
   try {
-    const messageData = req.body;
+    const senderId = Number(req.user?.user_id);
+    if (!Number.isFinite(senderId)) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const receiverId = Number(req.body?.receiver_id ?? req.body?.receiverId);
+    if (!Number.isFinite(receiverId)) {
+      return res.status(400).json({ error: "Invalid receiver_id" });
+    }
+    if (receiverId === senderId) {
+      return res.status(400).json({ error: "receiver_id must be different" });
+    }
+
+    const bookingIdRaw = req.body?.booking_id ?? req.body?.bookingId ?? null;
+    const bookingId = bookingIdRaw == null ? null : Number(bookingIdRaw);
+    if (bookingIdRaw != null && !Number.isFinite(bookingId)) {
+      return res.status(400).json({ error: "Invalid booking_id" });
+    }
+
+    const messageText = String(
+      req.body?.message_text ?? req.body?.messageText ?? req.body?.text ?? ""
+    ).trim();
+    if (!messageText) {
+      return res.status(400).json({ error: "message_text is required" });
+    }
+
+    const messageData = {
+      sender_id: senderId,
+      receiver_id: receiverId,
+      booking_id: bookingId,
+      message_text: messageText,
+    };
+
     const newMessage = await Message.create(messageData);
+
+    // Notifications: message received (local/tourist)
+    try {
+      const receiver = await User.findById(receiverId);
+      const receiverRole = String(receiver?.role || "tourist")
+        .toLowerCase()
+        .trim();
+      const dash =
+        receiverRole === "admin"
+          ? "/admin"
+          : receiverRole === "local" || receiverRole === "guide"
+          ? "/local"
+          : "/dashboard";
+      await Notification.create({
+        user_id: receiverId,
+        type: "message_received",
+        title: "New message",
+        message: "You have received a new message.",
+        link: `${dash}?tab=messages&chat=${senderId}`,
+        metadata: {
+          sender_id: senderId,
+          receiver_id: receiverId,
+          booking_id: bookingId,
+          message_id: newMessage?.message_id,
+        },
+      });
+    } catch {
+      // don't block messaging flow
+    }
+
+    if (pusher) {
+      const conversationId = toConversationId(senderId, receiverId);
+      const channel = `private-chat-${conversationId}`;
+      pusher.trigger(channel, "message:new", {
+        message: newMessage,
+      });
+    }
+
     res.status(201).json(newMessage);
   } catch (error) {
     console.error("Error sending message:", error);
