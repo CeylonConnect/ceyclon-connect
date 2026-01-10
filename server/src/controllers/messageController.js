@@ -96,14 +96,27 @@ export const sendMessage = async (req, res) => {
 export const getConversation = async (req, res) => {
   try {
     const { user1Id, user2Id } = req.params;
+    const me = Number(req.user?.user_id);
+    const u1 = Number(user1Id);
+    const u2 = Number(user2Id);
+    const isAdmin = String(req.user?.role || "").toLowerCase() === "admin";
+    if (!isAdmin && me !== u1 && me !== u2) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
     const { bookingId } = req.query;
-    const conversation = await Message.getConversation(user1Id, user2Id, bookingId);
+    const conversation = await Message.getConversation(
+      user1Id,
+      user2Id,
+      bookingId
+    );
     res.status(200).json(conversation);
   } catch (error) {
     console.error("Error fetching conversation:", error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 
