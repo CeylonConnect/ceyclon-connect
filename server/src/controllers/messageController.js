@@ -121,6 +121,13 @@ export const getConversation = async (req, res) => {
 export const getUserConversations = async (req, res) => {
   try {
     const { userId } = req.params;
+    const me = Number(req.user?.user_id);
+    const target = Number(userId);
+    const isAdmin = String(req.user?.role || "").toLowerCase() === "admin";
+    if (!isAdmin && me !== target) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
     const conversations = await Message.getUserConversations(userId);
     res.status(200).json(conversations);
   } catch (error) {
