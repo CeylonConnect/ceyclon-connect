@@ -136,8 +136,6 @@ export const getUserConversations = async (req, res) => {
   }
 };
 
-
-
 //Mark a message as read
 export const markMessageAsRead = async (req, res) => {
   try {
