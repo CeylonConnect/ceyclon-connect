@@ -3,47 +3,49 @@ import Navbar from "../components/Navbar";
 import { useBooking } from "../state/BookingContext";
 import BookingItem from "../components/dashboard/BookingItem";
 import ChatPanel from "../components/dashboard/ChatPanel";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Avatar from "../components/ui/avatar";
 import { useAuth } from "../state/AuthContext";
 
 function StatCard({ label, value }) {
   return (
-    <div className="p-6 bg-white border shadow-sm rounded-2xl border-neutral-200">
-      <div className="text-sm text-neutral-600">{label}</div>
-      <div className="mt-3 text-3xl font-bold text-neutral-900">{value}</div>
+    <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-black">
+      <div className="text-sm text-neutral-600 dark:text-neutral-300">
+        {label}
+      </div>
+      <div className="mt-3 text-3xl font-bold text-neutral-900 dark:text-white">
+        {value}
+      </div>
     </div>
   );
 }
 
-
 export default function Dashboard() {
   const {
     bookings,
-    updateBookingStatus,
     loadBookings,
     loading: bookingsLoading,
     error: bookingsError,
   } = useBooking();
-
-  const { user, setUser, initializing } = useAuth();
   const [tab, setTab] = useState("bookings");
-
+  const { user, setUser, initializing } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ---------------------------
-  // Safe display name
-  // ---------------------------
-  const firstName = user?.firstName || user?.first_name || "";
-  const lastName = user?.lastName || user?.last_name || "";
+  const role = (user?.role || "tourist").toString().toLowerCase();
 
-  const displayName =
-    firstName || lastName ? `${firstName} ${lastName}`.trim() : "Traveler";
-
+  // Read banner param
   const justBooked = new URLSearchParams(location.search).get("booking");
 
-  // Redirect if not logged in
+  // Allow deep-linking into a tab (e.g. /dashboard?tab=messages)
+  useEffect(() => {
+    const t = new URLSearchParams(location.search).get("tab");
+    const allowed = new Set(["bookings", "messages", "profile"]);
+    if (t && allowed.has(String(t).toLowerCase())) {
+      setTab(String(t).toLowerCase());
+    }
+  }, [location.search]);
+
   useEffect(() => {
     if (!initializing && !user) {
       navigate(`/login?next=${encodeURIComponent("/dashboard")}`, {
@@ -52,25 +54,29 @@ export default function Dashboard() {
     }
   }, [initializing, user, navigate]);
 
-  // Load bookings
+  // Role-based routing: locals/admins should not use the tourist dashboard.
   useEffect(() => {
-    if (!user?.user_id) return;
+    if (initializing || !user) return;
+    if (role === "admin") {
+      navigate("/admin", { replace: true });
+      return;
+    }
+    if (role === "local" || role === "guide") {
+      navigate("/local", { replace: true });
+    }
+  }, [initializing, user, role, navigate]);
 
-    loadBookings({
-      userId: user.user_id,
-      role: user.role,
-    }).catch(() => {});
-  }, [user?.user_id, user?.role, loadBookings]);
+  useEffect(() => {
+    if (!user?.id) return;
+    loadBookings({ userId: user.id, role: "tourist" }).catch(() => {
+      /* errors handled in context */
+    });
+  }, [user?.id, loadBookings]);
 
-  
-  // Stats
   const stats = useMemo(() => {
     const total = bookings.length;
     const upcoming = bookings.filter((b) => b.status !== "cancelled").length;
-    const spent = bookings.reduce(
-      (sum, b) => sum + Number(b.total_amount || 0),
-      0
-    );
+    const spent = bookings.reduce((sum, b) => sum + Number(b.total || 0), 0);
     return { total, upcoming, spent };
   }, [bookings]);
 
@@ -78,8 +84,8 @@ export default function Dashboard() {
     return (
       <>
         <Navbar />
-        <main className="bg-sand-50">
-          <section className="max-w-6xl px-4 py-16 mx-auto text-center text-neutral-600">
+        <main className="bg-sand-50 dark:bg-black">
+          <section className="mx-auto max-w-6xl px-4 py-16 text-center text-neutral-600 dark:text-neutral-300">
             {initializing
               ? "Loading your dashboard..."
               : "Redirecting to login..."}
@@ -92,36 +98,36 @@ export default function Dashboard() {
   return (
     <>
       <Navbar />
-      <main className="bg-sand-50">
-        <section className="max-w-6xl px-4 py-8 mx-auto">
-
+      <main className="bg-sand-50 dark:bg-black">
+        <section className="mx-auto max-w-6xl px-4 py-8">
           {/* Header */}
           <div className="flex items-center gap-4">
             <Avatar
               src={user.avatar}
-              name={displayName}
+              name={`${user.firstName || ""} ${user.lastName || ""}`.trim()}
               email={user.email}
               size={56}
-              className="shadow ring-2 ring-white"
+              className="ring-2 ring-white shadow dark:ring-neutral-800"
             />
             <div>
-              <h1 className="text-3xl font-extrabold text-neutral-900">
-                Welcome back, {displayName}!
+              <h1 className="text-3xl font-extrabold text-neutral-900 dark:text-white">
+                Welcome back, {user.firstName || "Traveler"}!
               </h1>
-              <p className="text-neutral-600">
+              <p className="text-neutral-600 dark:text-neutral-300">
                 Manage your bookings and profile
               </p>
             </div>
           </div>
 
           {justBooked && (
-            <div className="p-3 mt-4 text-sm border rounded-xl border-amber-200 bg-amber-50 text-amber-800">
-              Pending local approval. Your guide will review and contact you in Messages.
+            <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
+              Pending local approval. Your guide will review and contact you in
+              Messages.
             </div>
           )}
 
           {/* Tabs */}
-          <div className="flex gap-2 mt-6">
+          <div className="mt-6 flex gap-2">
             {[
               { id: "bookings", label: "My Bookings" },
               { id: "messages", label: "Messages" },
@@ -132,80 +138,58 @@ export default function Dashboard() {
                 onClick={() => setTab(t.id)}
                 className={`rounded-xl px-4 py-2 text-sm font-semibold ${
                   tab === t.id
-                    ? "bg-white shadow-sm"
-                    : "bg-transparent hover:bg-white/60"
-                } border border-neutral-200 text-neutral-800`}
+                    ? "bg-white shadow-sm dark:bg-neutral-900"
+                    : "bg-transparent hover:bg-white/60 dark:hover:bg-neutral-900/60"
+                } border border-neutral-200 text-neutral-800 dark:border-neutral-800 dark:text-neutral-200`}
               >
                 {t.label}
               </button>
             ))}
-
-            {/* Tourist */}
-            {user?.role === "tourist" && (
-              <Link
-                to="/tours"
-                className="px-4 py-2 ml-auto text-sm font-semibold text-white bg-orange-500 rounded-xl"
-              >
-                Book New Tour
-              </Link>
-            )}
-
-            {/* Guide */}
-            {user?.role === "guide" && (
-              <Link
-                to="/guide/tours"
-                className="px-4 py-2 ml-auto text-sm font-semibold text-white bg-neutral-900 rounded-xl"
-              >
-                Manage My Tours
-              </Link>
-            )}
+            <a
+              href="/tours"
+              className="ml-auto rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white hover:brightness-105"
+            >
+              Book New Tour
+            </a>
           </div>
 
-          {/* Bookings */}
           {tab === "bookings" && (
             <>
-              <div className="grid gap-4 mt-6 md:grid-cols-3">
+              <div className="mt-6 grid gap-4 md:grid-cols-3">
                 <StatCard label="Total Bookings" value={stats.total} />
                 <StatCard label="Upcoming Tours" value={stats.upcoming} />
-                <StatCard label="Total Spent" value={`$${stats.spent}`} />
+                <StatCard label="Total Spent" value={`Rs. ${stats.spent}`} />
               </div>
 
               <h2 className="mt-8 text-2xl font-extrabold text-neutral-900">
                 Your Bookings
               </h2>
-
               <div className="mt-4 space-y-4">
                 {bookingsLoading && (
-                  <div className="p-8 text-center bg-white border rounded-2xl border-neutral-200 text-neutral-600">
+                  <div className="rounded-2xl border border-neutral-200 bg-white p-8 text-center text-neutral-600 dark:border-neutral-800 dark:bg-black dark:text-neutral-300">
                     Loading bookings...
                   </div>
                 )}
-
                 {!bookingsLoading && bookingsError && (
-                  <div className="p-4 text-sm text-red-700 border border-red-200 rounded-2xl bg-red-50">
+                  <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-rose-500/30 dark:bg-rose-950/30 dark:text-rose-200">
                     {bookingsError}
                   </div>
                 )}
-
                 {!bookingsLoading &&
                   bookings.length === 0 &&
                   !bookingsError && (
-                    <div className="p-8 text-center bg-white border rounded-2xl border-neutral-200 text-neutral-600">
+                    <div className="rounded-2xl border border-neutral-200 bg-white p-8 text-center text-neutral-600 dark:border-neutral-800 dark:bg-black dark:text-neutral-300">
                       You have no bookings yet.
                     </div>
                   )}
-
                 {!bookingsLoading &&
                   bookings.map((b) => (
                     <BookingItem
-                      key={b.booking_id}
+                      key={b.id}
                       booking={b}
-                      onApprove={(id) =>
-                        updateBookingStatus(id, "confirmed")
-                      }
                       onMessage={(bkg) => {
                         setTab("messages");
-                        navigate(`/dashboard?chat=${bkg.provider_id}`, {
+                        navigate(`/dashboard?chat=${bkg.guide.id}`, {
                           replace: true,
                         });
                       }}
@@ -215,7 +199,6 @@ export default function Dashboard() {
             </>
           )}
 
-          {/* Messages */}
           {tab === "messages" && (
             <div className="mt-6">
               <ChatPanel
@@ -226,20 +209,17 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* Profile */}
           {tab === "profile" && (
-            <div className="grid gap-4 mt-6 md:grid-cols-2">
-              <div className="p-6 bg-white border shadow-sm rounded-2xl border-neutral-200">
-                <h3 className="text-lg font-semibold text-neutral-800">
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-black">
+                <h3 className="text-lg font-semibold text-neutral-800 dark:text-white">
                   Profile
                 </h3>
-
                 <form
                   className="mt-4 space-y-4"
                   onSubmit={(e) => {
                     e.preventDefault();
                     const fd = new FormData(e.currentTarget);
-
                     setUser((u) => ({
                       ...u,
                       firstName: fd.get("firstName"),
@@ -247,12 +227,77 @@ export default function Dashboard() {
                       email: fd.get("email"),
                       phone: fd.get("phone"),
                     }));
-
                     alert("Profile updated!");
                   }}
                 >
-                  {/* your inputs */}
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                        First Name
+                      </label>
+                      <input
+                        name="firstName"
+                        defaultValue={user.firstName}
+                        className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-orange-400/40 dark:border-neutral-800 dark:bg-black dark:text-neutral-200"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                        Last Name
+                      </label>
+                      <input
+                        name="lastName"
+                        defaultValue={user.lastName}
+                        className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-orange-400/40 dark:border-neutral-800 dark:bg-black dark:text-neutral-200"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                        Email
+                      </label>
+                      <input
+                        name="email"
+                        type="email"
+                        defaultValue={user.email}
+                        className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-orange-400/40 dark:border-neutral-800 dark:bg-black dark:text-neutral-200"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                        Phone
+                      </label>
+                      <input
+                        name="phone"
+                        defaultValue={user.phone}
+                        className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-orange-400/40 dark:border-neutral-800 dark:bg-black dark:text-neutral-200"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <button className="rounded-xl bg-neutral-900 px-4 py-2 text-sm font-semibold text-white">
+                      Save changes
+                    </button>
+                  </div>
                 </form>
+              </div>
+
+              <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-black">
+                <h3 className="text-lg font-semibold text-neutral-800 dark:text-white">
+                  Account
+                </h3>
+                <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-300">
+                  Update your information and manage your account security.
+                </p>
+                <a
+                  href="/tours"
+                  className="mt-6 inline-flex rounded-xl border border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-50 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-900"
+                >
+                  Browse more tours
+                </a>
               </div>
             </div>
           )}
@@ -261,4 +306,3 @@ export default function Dashboard() {
     </>
   );
 }
-
