@@ -117,9 +117,6 @@ export const getConversation = async (req, res) => {
   }
 };
 
-
-
-
 //Get all conversations for a user (last message preview)
 export const getUserConversations = async (req, res) => {
   try {
