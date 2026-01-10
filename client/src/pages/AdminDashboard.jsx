@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import AdminTopbar from "../components/admin/AdminTopbar";
 import StatsHeader from "../components/admin/StatHeader";
 import Tabs from "../components/admin/AdminTabs";
@@ -7,9 +8,45 @@ import ToursPanel from "../components/admin/ToursPanel";
 import BadgeRequestsPanel from "../components/admin/BadgeRequestPanel";
 import DisputesPanel from "../components/admin/DisputesPanel";
 import EventsPanel from "../components/admin/EventsPanel";
+import { useAuth } from "../state/AuthContext";
 
 export default function AdminDashboard() {
-  const [tab, setTab] = useState("badge"); 
+  const { user, initializing } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const role = (user?.role || "").toString().toLowerCase();
+
+  const [tab, setTab] = useState("badge");
+
+  // Allow deep-linking into a tab (e.g. /admin?tab=disputes)
+  useEffect(() => {
+    const t = new URLSearchParams(location.search).get("tab");
+    const allowed = new Set(["users", "tours", "badge", "disputes", "events"]);
+    if (t && allowed.has(String(t).toLowerCase())) {
+      setTab(String(t).toLowerCase());
+    }
+  }, [location.search]);
+
+  useEffect(() => {
+    if (initializing) return;
+    if (!user) {
+      const next = `${location.pathname}${location.search}`;
+      navigate(`/login?next=${encodeURIComponent(next)}`, { replace: true });
+      return;
+    }
+    if (role && role !== "admin") {
+      if (role === "local" || role === "guide") {
+        navigate("/local", { replace: true });
+      } else {
+        navigate("/dashboard", { replace: true });
+      }
+    }
+  }, [initializing, user, role, navigate, location.pathname, location.search]);
+
+  if (initializing) return null;
+  if (!user) return null;
+  if (role !== "admin") return null;
+
   const items = [
     { value: "users", label: "Users" },
     { value: "tours", label: "Tours" },
@@ -19,7 +56,7 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <main className="min-h-screen bg-sand-50">
+    <main className="min-h-screen bg-sand-50 dark:bg-black">
       <AdminTopbar />
       <StatsHeader />
 
