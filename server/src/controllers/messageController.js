@@ -176,8 +176,6 @@ export const markMessageAsRead = async (req, res) => {
   }
 };
 
-
-
 //Get unread message count for a user
 export const getUnreadCount = async (req, res) => {
   try {
