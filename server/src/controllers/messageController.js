@@ -212,5 +212,23 @@ export const markConversationAsRead = async (req, res) => {
   }
 };
 
+//Get unread message count for a user
+export const getUnreadCount = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const me = Number(req.user?.user_id);
+    const target = Number(userId);
+    const isAdmin = String(req.user?.role || "").toLowerCase() === "admin";
+    if (!isAdmin && me !== target) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+    const unreadCount = await Message.getUnreadCount(userId);
+    res.status(200).json({ unread_count: unreadCount });
+  } catch (error) {
+    console.error("Error fetching unread count:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 
