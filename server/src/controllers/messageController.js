@@ -177,13 +177,37 @@ export const markMessageAsRead = async (req, res) => {
 };
 
 //Get unread message count for a user
-export const getUnreadCount = async (req, res) => {
+export const markConversationAsRead = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const unreadCount = await Message.getUnreadCount(userId);
-    res.status(200).json({ unread_count: unreadCount });
+    const me = Number(req.user?.user_id);
+    if (!Number.isFinite(me)) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const otherUserId = Number(req.params?.otherUserId);
+    if (!Number.isFinite(otherUserId)) {
+      return res.status(400).json({ error: "Invalid otherUserId" });
+    }
+    if (otherUserId === me) {
+      return res.status(400).json({ error: "otherUserId must be different" });
+    }
+
+    const updatedRows = await Message.markConversationAsRead(me, otherUserId);
+
+    if (pusher && Array.isArray(updatedRows) && updatedRows.length) {
+      const conversationId = toConversationId(me, otherUserId);
+      const channel = `private-chat-${conversationId}`;
+      // Emit one event with the list of message ids.
+      pusher.trigger(channel, "conversation:read", {
+        reader_id: me,
+        message_ids: updatedRows.map((m) => m.message_id),
+        read_at: updatedRows[updatedRows.length - 1]?.read_at || null,
+      });
+    }
+
+    res.status(200).json({ updated: updatedRows?.length || 0 });
   } catch (error) {
-    console.error("Error fetching unread count:", error);
+    console.error("Error marking conversation as read:", error);
     res.status(500).json({ error: error.message });
   }
 };
