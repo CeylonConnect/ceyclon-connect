@@ -140,7 +140,35 @@ export const getUserConversations = async (req, res) => {
 export const markMessageAsRead = async (req, res) => {
   try {
     const { messageId } = req.params;
+    const me = Number(req.user?.user_id);
+    if (!Number.isFinite(me)) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const existing = await Message.findById(messageId);
+    if (!existing) {
+      return res.status(404).json({ error: "Message not found" });
+    }
+
+    const isAdmin = String(req.user?.role || "").toLowerCase() === "admin";
+    if (!isAdmin && Number(existing.receiver_id) !== me) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
     const updatedMessage = await Message.markAsRead(messageId);
+
+    if (pusher && updatedMessage) {
+      const conversationId = toConversationId(
+        updatedMessage.sender_id,
+        updatedMessage.receiver_id
+      );
+      const channel = `private-chat-${conversationId}`;
+      pusher.trigger(channel, "message:read", {
+        message_id: updatedMessage.message_id,
+        read_at: updatedMessage.read_at || new Date().toISOString(),
+        receiver_id: updatedMessage.receiver_id,
+      });
+    }
     res.status(200).json(updatedMessage);
   } catch (error) {
     console.error("Error marking message as read:", error);
