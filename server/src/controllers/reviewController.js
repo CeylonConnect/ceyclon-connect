@@ -1,7 +1,5 @@
 import Review from "../models/reviewModel.js";
 
-
-
   //  Create a new review
 export const createReview = async (req, res) => {
   try {
@@ -49,12 +47,16 @@ export const getReviewsByGuide = async (req, res) => {
   }
 };
 
-// ✅ Get average rating for a specific tour
+// Get average rating for a specific tour
 export const getAverageRating = async (req, res) => {
   try {
     const { tourId } = req.params;
     const stats = await Review.getAverageRating(tourId);
-    res.status(200).json(stats);
+    res.status(200).json({
+      ...stats,
+      average: Number(stats?.average_rating || 0),
+      total: Number(stats?.total_reviews || 0),
+    });
   } catch (error) {
     console.error("Error fetching average rating:", error);
     res.status(500).json({ error: "Failed to fetch average rating" });
