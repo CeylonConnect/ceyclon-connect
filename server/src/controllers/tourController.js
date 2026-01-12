@@ -82,7 +82,59 @@ const normalizeTourPayload = (body = {}) => {
 
 export const createTour = async (req, res) => {
   try {
-    const tour = await Tour.create(req.body);
+    const userId = req.user?.user_id;
+    if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+    const dbUser = await User.findById(userId);
+    const role = (dbUser?.role || req.user?.role || "")
+      .toString()
+      .toLowerCase();
+    const badgeStatus = (dbUser?.badge_status || "").toString().toLowerCase();
+
+    if (role !== "local" && role !== "guide") {
+      return res
+        .status(403)
+        .json({ error: "Only local guides can create tours" });
+    }
+
+    if (badgeStatus !== "verified") {
+      return res.status(403).json({
+        error: "Your badge request must be approved before creating tours",
+      });
+    }
+
+    const payload = normalizeTourPayload(req.body);
+    payload.provider_id = userId;
+
+    // Validate required fields early (avoid DB constraint errors -> 500)
+    if (!payload.title) {
+      return res.status(400).json({ error: "Title is required" });
+    }
+    if (!payload.location) {
+      return res.status(400).json({ error: "Location is required" });
+    }
+    if (payload.price === undefined) {
+      return res.status(400).json({ error: "Price is required" });
+    }
+    if (payload.category && !ALLOWED_CATEGORIES.has(payload.category)) {
+      return res.status(400).json({ error: "Invalid category" });
+    }
+
+    const tour = await Tour.create(payload);
+
+    // Tourist notification: newly published tour
+    try {
+      await Notification.createForRole("tourist", {
+        type: "tour_published",
+        title: "New tour published",
+        message: `${tour?.title || "A new tour"} is now available.`,
+        link: "/tours",
+        metadata: { tour_id: tour?.tour_id, provider_id: tour?.provider_id },
+      });
+    } catch {
+      // ignore
+    }
+
     res.status(201).json({ message: "Tour created successfully", tour });
   } catch (error) {
     res.status(500).json({ error: error.message });
