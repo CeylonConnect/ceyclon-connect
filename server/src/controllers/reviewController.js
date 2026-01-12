@@ -68,7 +68,11 @@ export const getGuideAverageRating = async (req, res) => {
   try {
     const { guideId } = req.params;
     const stats = await Review.getGuideAverageRating(guideId);
-    res.status(200).json(stats);
+    res.status(200).json({
+      ...stats,
+      average: Number(stats?.average_rating || 0),
+      total: Number(stats?.total_reviews || 0),
+    });
   } catch (error) {
     console.error("Error fetching guide average rating:", error);
     res.status(500).json({ error: "Failed to fetch guide rating" });
