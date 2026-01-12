@@ -5,8 +5,19 @@ import Review from "../models/reviewModel.js";
   //  Create a new review
 export const createReview = async (req, res) => {
   try {
-    const reviewData = req.body;
-    const newReview = await Review.create(reviewData);
+    const touristId = req.user?.user_id;
+    if (!touristId) return res.status(401).json({ error: "Unauthorized" });
+
+    const { tour_id, tourId, booking_id, bookingId, rating, comment } =
+      req.body || {};
+
+    const newReview = await Review.create({
+      tourist_id: touristId,
+      tour_id: tour_id ?? tourId,
+      booking_id: booking_id ?? bookingId,
+      rating,
+      comment,
+    });
     res.status(201).json(newReview);
   } catch (error) {
     console.error("Error creating review:", error.message);
