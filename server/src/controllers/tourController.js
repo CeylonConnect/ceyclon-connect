@@ -169,7 +169,10 @@ export const getTourById = async (req, res) => {
 
 export const getToursByProvider = async (req, res) => {
   try {
-    const tours = await Tour.getByProvider(req.params.providerId);
+    const providerId = Number(req.params.providerId);
+    const tours = await Tour.getByProvider(
+      Number.isFinite(providerId) ? providerId : req.params.providerId
+    );
     res.json(tours);
   } catch (error) {
     console.error("Error fetching provider tours:", error);
