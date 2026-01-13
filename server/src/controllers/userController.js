@@ -58,15 +58,27 @@ export const loginUser = async (req, res) => {
     const user = await User.findByEmail(email);
     if (!user) return res.status(404).json({ message: "User not found" });
 
+    // MySQL stores booleans as TINYINT (0/1). Treat 0/"0" as blocked.
+    if (!Number(user.is_verified)) {
+      return res
+        .status(403)
+        .json({ message: "Account blocked", error: "Account blocked" });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password_hash);
-    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+    if (!isMatch)
+      return res.status(401).json({ message: "Invalid credentials" });
 
     const token = generateToken(user);
-    res.json({ token, user });
+
+    // Never send password hash to the client
+    const safeUser = await User.findById(user.user_id);
+    res.json({ token, user: safeUser });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 // Get All
 export const getAllUsers = async (req, res) => {
   try {
