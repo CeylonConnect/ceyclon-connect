@@ -119,6 +119,18 @@ export const getUserById = async (req, res) => {
   }
 };
 
+const pickProfileUpdates = (body = {}) => {
+  // Only allow profile fields here. Role, is_verified, badge_status, etc. must
+  // be changed via admin endpoints.
+  const first_name = body.first_name ?? body.firstName;
+  const last_name = body.last_name ?? body.lastName;
+  const phone = body.phone;
+  const profile_picture =
+    body.profile_picture ?? body.profilePicture ?? body.avatar;
+  const email = body.email;
+  return { first_name, last_name, phone, profile_picture, email };
+};
+
 // Update
 export const updateUser = async (req, res) => {
   try {
