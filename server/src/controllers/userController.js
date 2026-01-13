@@ -27,12 +27,30 @@ const generateToken = (user) => {
 // Register
 export const registerUser = async (req, res) => {
   try {
-    const user = await User.create(req.body);
+    const role = normalizePublicRole(req.body?.role);
+    const user = await User.create({ ...req.body, role });
+
+    // Admin notification: new user registration
+    try {
+      await Notification.createForRole("admin", {
+        type: "user_registered",
+        title: "New user registration",
+        message: `${user?.first_name || "A user"} registered as ${
+          user?.role || "tourist"
+        }.`,
+        link: "/admin?tab=users",
+        metadata: { user_id: user?.user_id, role: user?.role },
+      });
+    } catch {
+      // ignore
+    }
+
     res.status(201).json({ message: "User registered successfully", user });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 // Login
 export const loginUser = async (req, res) => {
   try {
