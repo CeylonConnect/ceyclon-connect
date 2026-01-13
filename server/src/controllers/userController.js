@@ -2,11 +2,26 @@ import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
+import Notification from "../models/notificationModel.js";
 dotenv.config();
+
+const normalizePublicRole = (role) => {
+  if (!role) return "tourist";
+  const value = String(role).toLowerCase().trim();
+  if (value === "guide") return "local";
+  if (value === "local" || value === "tourist") return value;
+  // Prevent privilege escalation (e.g. role=admin)
+  return "tourist";
+};
+
 const generateToken = (user) => {
-  return jwt.sign({ user_id: user.user_id, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: "7d",
-  });
+  return jwt.sign(
+    { user_id: user.user_id, role: user.role },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "7d",
+    }
+  );
 };
 
 // Register
