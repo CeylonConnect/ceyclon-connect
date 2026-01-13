@@ -131,6 +131,58 @@ const pickProfileUpdates = (body = {}) => {
   return { first_name, last_name, phone, profile_picture, email };
 };
 
+// Update current user profile (from JWT)
+export const updateMe = async (req, res) => {
+  try {
+    const userId = Number(req.user?.user_id);
+    if (!Number.isFinite(userId)) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const existing = await User.findById(userId);
+    if (!existing) return res.status(404).json({ message: "User not found" });
+
+    const updates = pickProfileUpdates(req.body);
+
+    // Email: optional, but if provided enforce uniqueness.
+    const nextEmail =
+      updates.email != null ? String(updates.email).trim() : undefined;
+    if (nextEmail && nextEmail !== existing.email) {
+      const other = await User.findByEmail(nextEmail);
+      if (other && Number(other.user_id) !== userId) {
+        return res.status(409).json({
+          message: "Email already in use",
+          error: "Email already in use",
+        });
+      }
+      await User.updateEmail(userId, nextEmail);
+    }
+
+    const toSave = {
+      first_name:
+        updates.first_name != null
+          ? String(updates.first_name).trim()
+          : existing.first_name,
+      last_name:
+        updates.last_name != null
+          ? String(updates.last_name).trim()
+          : existing.last_name,
+      phone:
+        updates.phone != null ? String(updates.phone).trim() : existing.phone,
+      profile_picture:
+        updates.profile_picture != null
+          ? String(updates.profile_picture).trim()
+          : existing.profile_picture,
+    };
+
+    await User.update(userId, toSave);
+    const user = await User.findById(userId);
+    res.json({ message: "Profile updated", user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Update
 export const updateUser = async (req, res) => {
   try {
