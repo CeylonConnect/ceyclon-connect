@@ -182,7 +182,17 @@ export const getToursByProvider = async (req, res) => {
 
 export const updateTour = async (req, res) => {
   try {
-    const tour = await Tour.update(req.params.id, req.body);
+    const payload = normalizeTourPayload(req.body);
+
+    if (payload.category && !ALLOWED_CATEGORIES.has(payload.category)) {
+      return res.status(400).json({ error: "Invalid category" });
+    }
+
+    // Remove undefined keys so Tour.update won't attempt to set invalid values
+    const cleaned = Object.fromEntries(
+      Object.entries(payload).filter(([, v]) => v !== undefined)
+    );
+    const tour = await Tour.update(req.params.id, cleaned);
     res.json({ message: "Tour updated", tour });
   } catch (error) {
     res.status(500).json({ error: error.message });
