@@ -106,7 +106,12 @@ export const getAllUsers = async (req, res) => {
 // Get by ID
 export const getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const userId = Number(req.params?.id);
+    if (!Number.isFinite(userId)) {
+      return res.status(400).json({ message: "Invalid user id" });
+    }
+
+    const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
     res.json(user);
   } catch (error) {
