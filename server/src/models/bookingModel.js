@@ -1,4 +1,4 @@
-const pool = require("../config/database");
+import pool from "../config/database.js";
 
 const Booking = {
   async create(bookingData) {
@@ -12,23 +12,22 @@ const Booking = {
         special_requests,
       } = bookingData;
 
-      
-      const query = `
-        INSERT INTO bookings (tourist_id, tour_id, tour_date, group_size, total_amount, special_requests)
-        VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING *
-      `;
-      
-      const values = [
-        tourist_id,
-        tour_id,
-        tour_date,
-        group_size,
-        total_amount,
-        special_requests,
-      ];
-      const result = await pool.query(query, values);
-      return result.rows[0];
+      const insert = await pool.query(
+        "INSERT INTO bookings (tourist_id, tour_id, tour_date, group_size, total_amount, special_requests) VALUES (?, ?, ?, ?, ?, ?)",
+        [
+          tourist_id,
+          tour_id,
+          tour_date,
+          group_size,
+          total_amount,
+          special_requests,
+        ]
+      );
+      const created = await pool.query(
+        "SELECT * FROM bookings WHERE booking_id = ?",
+        [insert.insertId]
+      );
+      return created.rows[0];
     } catch (error) {
       throw error;
     }
@@ -44,7 +43,7 @@ const Booking = {
         JOIN tours t ON b.tour_id = t.tour_id
         JOIN users guide ON t.provider_id = guide.user_id
         JOIN users tourist ON b.tourist_id = tourist.user_id
-        WHERE b.booking_id = $1
+        WHERE b.booking_id = ?
       `;
       const result = await pool.query(query, [bookingId]);
       return result.rows[0];
@@ -56,12 +55,15 @@ const Booking = {
   async findByTourist(touristId) {
     try {
       const query = `
-        SELECT b.*, t.title, t.location, t.images, t.category,
-               guide.first_name as guide_first_name, guide.last_name as guide_last_name, guide.badge_status
+        SELECT b.*, t.title, t.location, t.images, t.category, t.provider_id,
+               guide.user_id as guide_id,
+               guide.first_name as guide_first_name, guide.last_name as guide_last_name,
+               guide.profile_picture as guide_avatar,
+               guide.badge_status
         FROM bookings b
         JOIN tours t ON b.tour_id = t.tour_id
         JOIN users guide ON t.provider_id = guide.user_id
-        WHERE b.tourist_id = $1
+        WHERE b.tourist_id = ?
         ORDER BY b.booking_date DESC
       `;
       const result = await pool.query(query, [touristId]);
@@ -74,12 +76,12 @@ const Booking = {
   async findByProvider(providerId) {
     try {
       const query = `
-        SELECT b.*, t.title, t.location, 
+        SELECT b.*, t.title, t.location, t.images, t.price,
                tourist.first_name, tourist.last_name, tourist.email, tourist.phone
         FROM bookings b
         JOIN tours t ON b.tour_id = t.tour_id
         JOIN users tourist ON b.tourist_id = tourist.user_id
-        WHERE t.provider_id = $1
+        WHERE t.provider_id = ?
         ORDER BY b.booking_date DESC
       `;
       const result = await pool.query(query, [providerId]);
@@ -91,9 +93,14 @@ const Booking = {
 
   async updateStatus(bookingId, status) {
     try {
-      const query =
-        "UPDATE bookings SET status = $1 WHERE booking_id = $2 RETURNING *";
-      const result = await pool.query(query, [status, bookingId]);
+      await pool.query("UPDATE bookings SET status = ? WHERE booking_id = ?", [
+        status,
+        bookingId,
+      ]);
+      const result = await pool.query(
+        "SELECT * FROM bookings WHERE booking_id = ?",
+        [bookingId]
+      );
       return result.rows[0];
     } catch (error) {
       throw error;
@@ -114,23 +121,19 @@ const Booking = {
       `;
 
       const values = [];
-      let paramCount = 0;
 
       if (filters.status) {
-        paramCount++;
-        query += ` AND b.status = $${paramCount}`;
+        query += " AND b.status = ?";
         values.push(filters.status);
       }
 
       if (filters.date_from) {
-        paramCount++;
-        query += ` AND b.tour_date >= $${paramCount}`;
+        query += " AND b.tour_date >= ?";
         values.push(filters.date_from);
       }
 
       if (filters.date_to) {
-        paramCount++;
-        query += ` AND b.tour_date <= $${paramCount}`;
+        query += " AND b.tour_date <= ?";
         values.push(filters.date_to);
       }
 
@@ -144,4 +147,4 @@ const Booking = {
   },
 };
 
-module.exports = Booking;
+export default Booking;
