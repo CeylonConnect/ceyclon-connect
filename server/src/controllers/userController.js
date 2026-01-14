@@ -244,4 +244,23 @@ export const updateUser = async (req, res) => {
   }
 };
 
+// Last seen (best-effort; null if not supported)
+export const getUserLastSeen = async (req, res) => {
+  try {
+    const me = Number(req.user?.user_id);
+    if (!Number.isFinite(me)) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const userId = Number(req.params?.id);
+    if (!Number.isFinite(userId)) {
+      return res.status(400).json({ error: "Invalid user id" });
+    }
+
+    const lastSeenAt = await User.getLastSeen(userId);
+    res.json({ user_id: userId, last_seen_at: lastSeenAt });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
