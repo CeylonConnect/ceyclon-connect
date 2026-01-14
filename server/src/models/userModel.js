@@ -1,5 +1,5 @@
-const pool = require("../config/database");
-const bcrypt = require("bcryptjs");
+import pool from "../config/database.js";
+import bcrypt from "bcryptjs";
 
 const User = {
   async create(userData) {
@@ -11,25 +11,31 @@ const User = {
         last_name,
         phone,
         role = "tourist",
+        profile_picture,
+        profilePicture,
       } = userData;
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const query = `
-        INSERT INTO users (email, password_hash, first_name, last_name, phone, role)
-        VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING user_id, email, first_name, last_name, role, created_at
-      `;
+      const profilePictureUrl = profile_picture || profilePicture || null;
 
-      const values = [
-        email,
-        hashedPassword,
-        first_name,
-        last_name,
-        phone,
-        role,
-      ];
-      const result = await pool.query(query, values);
-      return result.rows[0];
+      const insert = await pool.query(
+        "INSERT INTO users (email, password_hash, first_name, last_name, phone, role, profile_picture, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+          email,
+          hashedPassword,
+          first_name,
+          last_name,
+          phone,
+          role,
+          profilePictureUrl,
+          1,
+        ]
+      );
+      const created = await pool.query(
+        "SELECT user_id, email, first_name, last_name, role, profile_picture, is_verified, created_at FROM users WHERE user_id = ?",
+        [insert.insertId]
+      );
+      return created.rows[0];
     } catch (error) {
       throw error;
     }
@@ -37,7 +43,7 @@ const User = {
 
   async findByEmail(email) {
     try {
-      const query = "SELECT * FROM users WHERE email = $1";
+      const query = "SELECT * FROM users WHERE email = ?";
       const result = await pool.query(query, [email]);
       return result.rows[0];
     } catch (error) {
@@ -48,7 +54,7 @@ const User = {
   async findById(userId) {
     try {
       const query =
-        "SELECT user_id, email, first_name, last_name, phone, role, profile_picture, badge_status, is_verified, created_at FROM users WHERE user_id = $1";
+        "SELECT user_id, email, first_name, last_name, phone, role, profile_picture, badge_status, is_verified, created_at, last_seen_at FROM users WHERE user_id = ?";
       const result = await pool.query(query, [userId]);
       return result.rows[0];
     } catch (error) {
@@ -56,37 +62,90 @@ const User = {
     }
   },
 
+  async touchLastSeen(userId) {
+    try {
+      await pool.query(
+        "UPDATE users SET last_seen_at = NOW() WHERE user_id = ?",
+        [userId]
+      );
+      return true;
+    } catch (error) {
+      // Allow older schemas without last_seen_at
+      return false;
+    }
+  },
+
+  async getLastSeen(userId) {
+    try {
+      const result = await pool.query(
+        "SELECT last_seen_at FROM users WHERE user_id = ?",
+        [userId]
+      );
+      return result.rows[0]?.last_seen_at ?? null;
+    } catch (error) {
+      // Allow older schemas without last_seen_at
+      return null;
+    }
+  },
+
   async update(userId, updateData) {
     try {
       const { first_name, last_name, phone, profile_picture } = updateData;
 
-      const query = `
-        UPDATE users 
-        SET first_name = $1, last_name = $2, phone = $3, profile_picture = $4, updated_at = CURRENT_TIMESTAMP
-        WHERE user_id = $5
-        RETURNING user_id, email, first_name, last_name, phone, profile_picture
-      `;
-
-      const values = [first_name, last_name, phone, profile_picture, userId];
-      const result = await pool.query(query, values);
+      await pool.query(
+        "UPDATE users SET first_name = ?, last_name = ?, phone = ?, profile_picture = ?, updated_at = NOW() WHERE user_id = ?",
+        [first_name, last_name, phone, profile_picture, userId]
+      );
+      const result = await pool.query(
+        "SELECT user_id, email, first_name, last_name, phone, profile_picture FROM users WHERE user_id = ?",
+        [userId]
+      );
       return result.rows[0];
     } catch (error) {
       throw error;
     }
   },
 
-  async getAllUsers(role = null) {
+  async updateEmail(userId, email) {
+    try {
+      await pool.query(
+        "UPDATE users SET email = ?, updated_at = NOW() WHERE user_id = ?",
+        [email, userId]
+      );
+      const result = await pool.query(
+        "SELECT user_id, email, first_name, last_name, phone, role, profile_picture, badge_status, is_verified, created_at, last_seen_at FROM users WHERE user_id = ?",
+        [userId]
+      );
+      return result.rows[0];
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async getAllUsers(role = null, q = null) {
     try {
       let query =
-        "SELECT user_id, email, first_name, last_name, phone, role, badge_status, is_verified, created_at FROM users";
-      let values = [];
+        "SELECT user_id, email, first_name, last_name, phone, role, profile_picture, badge_status, is_verified, created_at, last_seen_at FROM users";
+      const values = [];
+      const where = [];
 
       if (role) {
-        query += " WHERE role = $1";
-        values = [role];
+        where.push("role = ?");
+        values.push(role);
       }
 
+      const s = q != null ? String(q).trim() : "";
+      if (s) {
+        where.push(
+          "(email LIKE ? OR first_name LIKE ? OR last_name LIKE ? OR phone LIKE ?)"
+        );
+        const like = `%${s}%`;
+        values.push(like, like, like, like);
+      }
+
+      if (where.length) query += " WHERE " + where.join(" AND ");
       query += " ORDER BY created_at DESC";
+
       const result = await pool.query(query, values);
       return result.rows;
     } catch (error) {
@@ -94,11 +153,42 @@ const User = {
     }
   },
 
+  async setIsVerified(userId, isVerified) {
+    try {
+      await pool.query(
+        "UPDATE users SET is_verified = ?, updated_at = NOW() WHERE user_id = ?",
+        [Boolean(isVerified) ? 1 : 0, userId]
+      );
+      const result = await pool.query(
+        "SELECT user_id, email, first_name, last_name, phone, role, profile_picture, badge_status, is_verified, created_at, last_seen_at FROM users WHERE user_id = ?",
+        [userId]
+      );
+      return result.rows[0];
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async unblockAllUsers() {
+    try {
+      const result = await pool.query(
+        "UPDATE users SET is_verified = 1, updated_at = NOW()"
+      );
+      return result.affectedRows ?? 0;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   async updateBadgeStatus(userId, badgeStatus) {
     try {
-      const query =
-        "UPDATE users SET badge_status = $1, updated_at = CURRENT_TIMESTAMP WHERE user_id = $2 RETURNING *";
-      const result = await pool.query(query, [badgeStatus, userId]);
+      await pool.query(
+        "UPDATE users SET badge_status = ?, updated_at = NOW() WHERE user_id = ?",
+        [badgeStatus, userId]
+      );
+      const result = await pool.query("SELECT * FROM users WHERE user_id = ?", [
+        userId,
+      ]);
       return result.rows[0];
     } catch (error) {
       throw error;
@@ -107,9 +197,13 @@ const User = {
 
   async suspendUser(userId) {
     try {
-      const query =
-        "UPDATE users SET is_verified = false, updated_at = CURRENT_TIMESTAMP WHERE user_id = $1 RETURNING *";
-      const result = await pool.query(query, [userId]);
+      await pool.query(
+        "UPDATE users SET is_verified = 0, updated_at = NOW() WHERE user_id = ?",
+        [userId]
+      );
+      const result = await pool.query("SELECT * FROM users WHERE user_id = ?", [
+        userId,
+      ]);
       return result.rows[0];
     } catch (error) {
       throw error;
@@ -117,4 +211,4 @@ const User = {
   },
 };
 
-module.exports = User;
+export default User;
