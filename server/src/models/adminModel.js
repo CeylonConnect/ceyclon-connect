@@ -1,11 +1,14 @@
-const pool = require("../config/database");
+import pool from "../config/database.js";
+
 const Admin = {
   async getPlatformStats() {
     try {
       const query = `
         SELECT 
+          (SELECT COUNT(*) FROM users) as total_users,
           (SELECT COUNT(*) FROM users WHERE role = 'tourist') as total_tourists,
           (SELECT COUNT(*) FROM users WHERE role = 'local') as total_locals,
+          (SELECT COUNT(*) FROM users WHERE role = 'admin') as total_admins,
           (SELECT COUNT(*) FROM tours) as total_tours,
           (SELECT COUNT(*) FROM bookings) as total_bookings,
           (SELECT COUNT(*) FROM reviews) as total_reviews,
@@ -18,11 +21,12 @@ const Admin = {
       throw error;
     }
   },
+
   async getBookingStats(timeframe = "month") {
     try {
-      let interval = "1 month";
-      if (timeframe === "week") interval = "1 week";
-      if (timeframe === "year") interval = "1 year";
+      let unit = "MONTH";
+      if (timeframe === "week") unit = "WEEK";
+      if (timeframe === "year") unit = "YEAR";
 
       const query = `
         SELECT 
@@ -30,7 +34,7 @@ const Admin = {
           COUNT(*) as booking_count,
           SUM(total_amount) as daily_revenue
         FROM bookings
-        WHERE booking_date >= NOW() - INTERVAL '${interval}'
+        WHERE booking_date >= DATE_SUB(NOW(), INTERVAL 1 ${unit})
         GROUP BY DATE(booking_date)
         ORDER BY date
       `;
@@ -40,6 +44,7 @@ const Admin = {
       throw error;
     }
   },
+
   async getPopularTours(limit = 10) {
     try {
       const query = `
@@ -55,9 +60,10 @@ const Admin = {
         LEFT JOIN reviews r ON t.tour_id = r.tour_id
         GROUP BY t.tour_id, t.title, t.location, t.category
         ORDER BY booking_count DESC
-        LIMIT $1
+        LIMIT ?
       `;
-      const result = await pool.query(query, [limit]);
+      const safeLimit = Number.isFinite(Number(limit)) ? Number(limit) : 10;
+      const result = await pool.query(query, [safeLimit]);
       return result.rows;
     } catch (error) {
       throw error;
@@ -65,4 +71,4 @@ const Admin = {
   },
 };
 
-module.exports = Admin;
+export default Admin;
