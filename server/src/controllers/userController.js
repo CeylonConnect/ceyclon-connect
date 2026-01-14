@@ -186,10 +186,62 @@ export const updateMe = async (req, res) => {
 // Update
 export const updateUser = async (req, res) => {
   try {
-    const user = await User.update(req.params.id, req.body);
+    const meId = Number(req.user?.user_id);
+    if (!Number.isFinite(meId)) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const targetId = Number(req.params.id);
+    if (!Number.isFinite(targetId)) {
+      return res.status(400).json({ message: "Invalid user id" });
+    }
+
+    const meRole = String(req.user?.role || "tourist").toLowerCase();
+    if (meRole !== "admin" && meId !== targetId) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const existing = await User.findById(targetId);
+    if (!existing) return res.status(404).json({ message: "User not found" });
+
+    const updates = pickProfileUpdates(req.body);
+
+    const nextEmail =
+      updates.email != null ? String(updates.email).trim() : undefined;
+    if (nextEmail && nextEmail !== existing.email) {
+      const other = await User.findByEmail(nextEmail);
+      if (other && Number(other.user_id) !== targetId) {
+        return res.status(409).json({
+          message: "Email already in use",
+          error: "Email already in use",
+        });
+      }
+      await User.updateEmail(targetId, nextEmail);
+    }
+
+    const toSave = {
+      first_name:
+        updates.first_name != null
+          ? String(updates.first_name).trim()
+          : existing.first_name,
+      last_name:
+        updates.last_name != null
+          ? String(updates.last_name).trim()
+          : existing.last_name,
+      phone:
+        updates.phone != null ? String(updates.phone).trim() : existing.phone,
+      profile_picture:
+        updates.profile_picture != null
+          ? String(updates.profile_picture).trim()
+          : existing.profile_picture,
+    };
+
+    await User.update(targetId, toSave);
+    const user = await User.findById(targetId);
     res.json({ message: "Profile updated", user });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
