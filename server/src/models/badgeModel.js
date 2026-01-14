@@ -1,19 +1,32 @@
-const pool = require('../config/database');
+import pool from "../config/database.js";
+
+function normalizeBadgeRow(row) {
+  if (!row) return row;
+  const out = { ...row };
+  if (typeof out.document_urls === "string") {
+    try {
+      out.document_urls = JSON.parse(out.document_urls);
+    } catch {
+      // keep
+    }
+  }
+  return out;
+}
 
 const BadgeRequest = {
   async create(requestData) {
     try {
       const { user_id, document_urls } = requestData;
 
-      const query = `
-        INSERT INTO badge_requests (user_id, document_urls)
-        VALUES ($1, $2)
-        RETURNING *
-      `;
-
-      const values = [user_id, document_urls];
-      const result = await pool.query(query, values);
-      return result.rows[0];
+      const insert = await pool.query(
+        "INSERT INTO badge_requests (user_id, document_urls) VALUES (?, ?)",
+        [user_id, JSON.stringify(document_urls ?? [])]
+      );
+      const created = await pool.query(
+        "SELECT * FROM badge_requests WHERE request_id = ?",
+        [insert.insertId]
+      );
+      return normalizeBadgeRow(created.rows[0]);
     } catch (error) {
       throw error;
     }
@@ -25,10 +38,10 @@ const BadgeRequest = {
         SELECT br.*, u.first_name, u.last_name, u.email, u.phone
         FROM badge_requests br
         JOIN users u ON br.user_id = u.user_id
-        WHERE br.request_id = $1
+        WHERE br.request_id = ?
       `;
       const result = await pool.query(query, [requestId]);
-      return result.rows[0];
+      return normalizeBadgeRow(result.rows[0]);
     } catch (error) {
       throw error;
     }
@@ -36,9 +49,10 @@ const BadgeRequest = {
 
   async findByUserId(userId) {
     try {
-      const query = 'SELECT * FROM badge_requests WHERE user_id = $1 ORDER BY submitted_at DESC';
+      const query =
+        "SELECT * FROM badge_requests WHERE user_id = ? ORDER BY submitted_at DESC";
       const result = await pool.query(query, [userId]);
-      return result.rows;
+      return result.rows.map(normalizeBadgeRow);
     } catch (error) {
       throw error;
     }
@@ -51,18 +65,18 @@ const BadgeRequest = {
         FROM badge_requests br
         JOIN users u ON br.user_id = u.user_id
       `;
-      
+
       let values = [];
-      
+
       if (status) {
-        query += ' WHERE br.status = $1';
+        query += " WHERE br.status = ?";
         values = [status];
       }
-      
-      query += ' ORDER BY br.submitted_at DESC';
-      
+
+      query += " ORDER BY br.submitted_at DESC";
+
       const result = await pool.query(query, values);
-      return result.rows;
+      return result.rows.map(normalizeBadgeRow);
     } catch (error) {
       throw error;
     }
@@ -70,16 +84,19 @@ const BadgeRequest = {
 
   async updateStatus(requestId, status, reviewedBy, adminNotes = null) {
     try {
-      const query = `
+      await pool.query(
+        `
         UPDATE badge_requests 
-        SET status = $1, reviewed_at = CURRENT_TIMESTAMP, reviewed_by = $2, admin_notes = $3
-        WHERE request_id = $4
-        RETURNING *
-      `;
-
-      const values = [status, reviewedBy, adminNotes, requestId];
-      const result = await pool.query(query, values);
-      return result.rows[0];
+        SET status = ?, reviewed_at = NOW(), reviewed_by = ?, admin_notes = ?
+        WHERE request_id = ?
+      `,
+        [status, reviewedBy, adminNotes, requestId]
+      );
+      const result = await pool.query(
+        "SELECT * FROM badge_requests WHERE request_id = ?",
+        [requestId]
+      );
+      return normalizeBadgeRow(result.rows[0]);
     } catch (error) {
       throw error;
     }
@@ -99,7 +116,7 @@ const BadgeRequest = {
     } catch (error) {
       throw error;
     }
-  }
+  },
 };
 
-module.exports = BadgeRequest;
+export default BadgeRequest;
