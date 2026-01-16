@@ -6,17 +6,19 @@ import {
   getToursByProvider,
   updateTour,
   deleteTour,
-  getToursByDistrict
+  getToursByDistrict,
 } from "../controllers/tourController.js";
+
+import { protect } from "../../middleware/authMiddleware.js";
+
 const router = express.Router();
 
-router.post("/", createTour);
+router.post("/", protect, createTour);
 router.get("/", getAllTours);
-router.get("/:id", getTourById);
 router.get("/provider/:providerId", getToursByProvider);
-router.put("/:id", updateTour);
-router.delete("/:id", deleteTour);
 router.get("/districts/grouped", getToursByDistrict);
-
+router.get("/:id", getTourById);
+router.put("/:id", protect, updateTour);
+router.delete("/:id", protect, deleteTour);
 
 export default router;
