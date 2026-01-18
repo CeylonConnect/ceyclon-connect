@@ -10,17 +10,44 @@ import http from "../lib/http";
 
 const AuthContext = createContext(null);
 
+function getDashboardPath(role) {
+  const r = (role || "tourist").toString().toLowerCase();
+  if (r === "admin") return "/admin";
+  if (r === "local" || r === "guide") return "/local";
+  return "/dashboard";
+}
+
 function normalizeUser(u = {}) {
   // Map backend shapes to the app shape
   const firstName = u.firstName || u.first_name || u.given_name || "";
   const lastName = u.lastName || u.last_name || u.family_name || "";
   const email = u.email || "";
   const phone = u.phone || u.phone_number || "";
-  const roleRaw = u.role || u.userRole || u.type || u.user_type || "tourist";
-  const role = typeof roleRaw === "string" ? roleRaw.toLowerCase() : "tourist";
-  const avatar = u.avatar || u.avatarUrl || u.avatar_url || u.photo || ""; // may be empty -> Avatar component will fallback
+  const role = (u.role || "tourist").toString().toLowerCase();
+  const avatar =
+    u.avatar ||
+    u.avatarUrl ||
+    u.avatar_url ||
+    u.photo ||
+    u.profile_picture ||
+    u.profilePicture ||
+    ""; // may be empty -> Avatar component will fallback
   const id = u.id || u._id || u.user_id || u.uid || "u_anon";
-  return { id, firstName, lastName, email, phone, avatar, role };
+  const badgeStatus = (u.badgeStatus || u.badge_status || u.badge || "none")
+    .toString()
+    .toLowerCase();
+  const isVerified = Boolean(u.isVerified ?? u.is_verified ?? false);
+  return {
+    id,
+    firstName,
+    lastName,
+    email,
+    phone,
+    avatar,
+    role,
+    badgeStatus,
+    isVerified,
+  };
 }
 
 export function AuthProvider({ children }) {
@@ -29,7 +56,7 @@ export function AuthProvider({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Boot session: if a token exists, hydrate from localStorage (no /users/me route on server)
+  // Boot session: if a token exists, fetch profile
   useEffect(() => {
     let cancelled = false;
 
@@ -43,19 +70,9 @@ export function AuthProvider({ children }) {
           setUser(null);
           return;
         }
-        // Prefer localStorage user to avoid relying on a non-existent /users/me endpoint
-        const raw = localStorage.getItem("user");
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (!cancelled) setUser(normalizeUser(parsed));
-        } else {
-          // Optional best-effort fetch if your API supports /users/:id
-          // Disabled by default to avoid 404s; uncomment and adapt if available.
-          // const id = JSON.parse(raw)?.id;
-          // if (id) {
-          //   const res = await http.get(`/users/${id}`);
-          //   if (!cancelled) setUser(normalizeUser(res.data || {}));
-          // }
+        const res = await http.get("/users/me");
+        if (!cancelled) {
+          setUser(normalizeUser(res.data || {}));
         }
       } catch (e) {
         // Token invalid -> clear
@@ -75,45 +92,43 @@ export function AuthProvider({ children }) {
 
   // Demo login (kept for quick testing)
   const loginAsDemo = () => {
-    setUser({
+    const demo = {
       id: "u_1",
       firstName: "John",
       lastName: "Traveler",
       email: "john@example.com",
       phone: "+94 77 123 4567",
       avatar: "", // no avatar -> fallback
-    });
-    const next = new URLSearchParams(location.search).get("next");
-    navigate(next || "/dashboard", { replace: true });
+      role: "tourist",
+    };
+    setUser(demo);
+    navigate("/", { replace: true });
   };
 
-  // Optional: after login, hydrate from storage and redirect
+  // Optional: call after login page stores token to load profile and redirect
   const fetchProfileAndRedirect = async () => {
-    let n = null;
     try {
-      const raw = localStorage.getItem("user");
-      if (raw) {
-        n = normalizeUser(JSON.parse(raw));
-        setUser(n);
-      }
-    } finally {
-      const next = new URLSearchParams(location.search).get("next");
-      if (next) {
-        navigate(next, { replace: true });
-      } else {
-        const src = n || user;
-        const dest =
-          src && (src.role === "local" || src.role === "guide")
-            ? "/local"
-            : "/dashboard";
-        navigate(dest, { replace: true });
-      }
+      const res = await http.get("/users/me");
+      const normalized = normalizeUser(res.data || {});
+      setUser(normalized);
+      navigate("/", { replace: true });
+    } catch (e) {
+      // fall back to login
+      navigate("/login", { replace: true });
     }
+  };
+
+  const refreshUser = async () => {
+    const res = await http.get("/users/me");
+    const normalized = normalizeUser(res.data || {});
+    setUser(normalized);
+    return normalized;
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
     setUser(null);
     navigate("/login", { replace: true });
   };
@@ -126,6 +141,7 @@ export function AuthProvider({ children }) {
       loginAsDemo,
       logout,
       fetchProfileAndRedirect,
+      refreshUser,
     }),
     [user, initializing]
   );
