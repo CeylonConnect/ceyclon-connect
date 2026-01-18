@@ -23,7 +23,10 @@ function coerceArray(value) {
       if (Array.isArray(parsed)) return parsed;
     } catch {
       if (value.includes(",")) {
-        return value.split(",").map((v) => v.trim()).filter(Boolean);
+        return value
+          .split(",")
+          .map((v) => v.trim())
+          .filter(Boolean);
       }
     }
     return [value];
@@ -59,7 +62,16 @@ function normalizeBooking(record = {}) {
   const guideName = [guideFirst, guideLast].filter(Boolean).join(" ").trim();
   const tourTitle = record.title || record.tour_title;
   const location =
-    record.location || record.tour_location || record.destination || "Sri Lanka";
+    record.location ||
+    record.tour_location ||
+    record.destination ||
+    "Sri Lanka";
+
+  const currencyRaw = record.currency || record.tour?.currency;
+  const currency =
+    String(currencyRaw || "").trim() === "$" || !currencyRaw
+      ? "Rs. "
+      : currencyRaw;
 
   return {
     id: record.booking_id || record.id || record._id || `b_${Date.now()}`,
@@ -80,8 +92,10 @@ function normalizeBooking(record = {}) {
       image: record.image || images[0] || FALLBACK_TOUR_IMAGE,
       location,
       durationHours: record.duration || record.duration_hours || null,
-      price: Number(record.price ?? record.tour_price ?? record.total_amount ?? 0),
-      currency: record.currency || record.tour?.currency || "$",
+      price: Number(
+        record.price ?? record.tour_price ?? record.total_amount ?? 0
+      ),
+      currency,
     },
     guide: {
       id:
@@ -90,11 +104,10 @@ function normalizeBooking(record = {}) {
         record.guide?.id ||
         `guide_${record.tour_id || record.booking_id}`,
       name: guideName || record.guide?.name || "Guide",
-      avatar: record.guide_avatar || record.guide?.avatar || FALLBACK_GUIDE_AVATAR,
+      avatar:
+        record.guide_avatar || record.guide?.avatar || FALLBACK_GUIDE_AVATAR,
       verified:
-        record.badge_status === "approved" ||
-        record.guide?.verified ||
-        false,
+        record.badge_status === "approved" || record.guide?.verified || false,
     },
   };
 }
@@ -116,72 +129,89 @@ export function BookingProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const createBooking = ({ tour, guide, date, guests }) => {
-    const total = Number(tour.price || 0) * Math.max(1, Number(guests || 1));
+  const createBooking = async ({
+    tour,
+    guide,
+    date,
+    guests,
+    specialRequests,
+  } = {}) => {
+    const tourIdRaw = tour?.id ?? tour?.tour_id ?? tour?.slug;
+    const tourId = Number(tourIdRaw);
+    const groupSize = Math.max(1, Number(guests || 1));
+
+    // If this is a real DB tour id, create a real booking on the server.
+    if (Number.isFinite(tourId)) {
+      const created = await api.post("/bookings", {
+        tour_id: tourId,
+        tour_date: date,
+        group_size: groupSize,
+        special_requests: specialRequests,
+      });
+      const normalized = normalizeBooking(created);
+      setBookings((prev) => [normalized, ...prev]);
+      return normalized;
+    }
+
+    // Fallback: demo booking for mock tours.
+    const total = Number(tour?.price || 0) * groupSize;
     const booking = {
       id: `b_${Date.now()}`,
       tour: {
-        id: tour.id ?? tour.slug ?? String(Date.now()),
-        slug: tour.slug,
-        title: tour.title,
-        image: tour.image,
-        location: tour.location,
-        durationHours: tour.durationHours,
-        price: tour.price,
-        currency: tour.currency || "$",
+        id: tour?.id ?? tour?.slug ?? String(Date.now()),
+        slug: tour?.slug,
+        title: tour?.title,
+        image: tour?.image,
+        location: tour?.location,
+        durationHours: tour?.durationHours,
+        price: tour?.price,
+        currency:
+          String(tour?.currency || "").trim() === "$" || !tour?.currency
+            ? "Rs. "
+            : tour.currency,
       },
       guide,
       date,
-      guests,
+      guests: groupSize,
       total,
       status: "pending",
       createdAt: new Date().toISOString(),
     };
+
     setBookings((prev) => [booking, ...prev]);
-
-    // Seed a system-style message thread with the guide for this booking
-    setMessages((prev) => {
-      const thread = prev[guide.id] ?? [];
-      return {
-        ...prev,
-        [guide.id]: [
-          ...thread,
-          {
-            id: `m_${Date.now()}`,
-            guideId: guide.id,
-            sender: "guide",
-            text:
-              "Thanks for your request! I’ll review and approve shortly. Feel free to send any questions here.",
-            createdAt: new Date().toISOString(),
-          },
-        ],
-      };
-    });
-
+    if (guide?.id) {
+      setMessages((prev) => {
+        const thread = prev[guide.id] ?? [];
+        return {
+          ...prev,
+          [guide.id]: [
+            ...thread,
+            {
+              id: `m_${Date.now()}`,
+              guideId: guide.id,
+              sender: "guide",
+              text: "Thanks for your request! I’ll review and approve shortly. Feel free to send any questions here.",
+              createdAt: new Date().toISOString(),
+            },
+          ],
+        };
+      });
+    }
     return booking;
   };
 
   const updateBookingStatus = async (bookingId, status) => {
-    let previousStatus;
-    setBookings((prev) =>
-      prev.map((b) => {
-        if (b.id === bookingId) {
-          previousStatus = b.status;
-          return { ...b, status };
-        }
-        return b;
-      })
-    );
-
     try {
-      await api.put(`/bookings/${bookingId}/status`, { status });
+      const updated = await api.patch(`/bookings/${bookingId}/status`, {
+        status,
+      });
+      const normalized = normalizeBooking(updated);
+      const normalizedId = normalized.id || bookingId;
+      setBookings((prev) =>
+        prev.map((b) => (b.id === normalizedId ? { ...b, ...normalized } : b))
+      );
     } catch (err) {
       console.error("Failed to sync booking status", err);
-      if (previousStatus) {
-        setBookings((prev) =>
-          prev.map((b) => (b.id === bookingId ? { ...b, status: previousStatus } : b))
-        );
-      }
       throw err;
     }
   };
@@ -211,8 +241,9 @@ export function BookingProvider({ children }) {
       setLoading(true);
       setError(null);
       try {
+        const normalizedRole = (role || "tourist").toString().toLowerCase();
         const path =
-          role === "provider"
+          normalizedRole === "provider" || normalizedRole === "local"
             ? `/bookings/provider/${encodeURIComponent(userId)}`
             : `/bookings/tourist/${encodeURIComponent(userId)}`;
         const data = await api.get(path);
@@ -247,7 +278,9 @@ export function BookingProvider({ children }) {
     [bookings, messages, loading, error, loadBookings]
   );
 
-  return <BookingContext.Provider value={value}>{children}</BookingContext.Provider>;
+  return (
+    <BookingContext.Provider value={value}>{children}</BookingContext.Provider>
+  );
 }
 
 export function useBooking() {
