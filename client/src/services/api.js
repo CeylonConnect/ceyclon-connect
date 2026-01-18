@@ -1,40 +1,20 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Login from "./pages/login.jsx";
-import Signup from "./pages/Signup.jsx";
-import Home from "./pages/Home.jsx";
-import Tours from "./pages/tour.jsx";
-import TourDetails from "./pages/TourDetails.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
-import Event from "./pages/Events.jsx";
-import About from "./pages/about.jsx";
-import AdminDashboard from "./pages/AdminDashboard.jsx";
-import LocalDashboard from "./pages/LocalDashboard.jsx";
-import { AuthProvider } from "./state/AuthContext";
-import { BookingProvider } from "./state/BookingContext";
+import axios from 'axios'
 
-export default function App() {
-  return (
-    <AuthProvider>
-      <BookingProvider>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+// Configure base URL. You can set VITE_API_BASE_URL in a .env file.
+// Fallback to common local backend path.
+const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api'
 
-          <Route path="/tours" element={<Tours />} />
-          <Route path="/tours/:slug" element={<TourDetails />} />
+const api = axios.create({
+  baseURL,
+  withCredentials: false
+})
 
-          <Route path="/events" element={<Event />} />
-          <Route path="/about" element={<About />} />
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
 
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/local" element={<LocalDashboard />} />
-
-          <Route path="*" element={<div className="p-8 text-center">Page not found</div>} />
-        </Routes>
-      </BookingProvider>
-    </AuthProvider>
-  );
-}
+export default api
