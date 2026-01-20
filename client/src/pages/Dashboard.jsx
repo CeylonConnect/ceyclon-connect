@@ -21,6 +21,7 @@ function StatCard({ label, value }) {
   );
 }
 
+
 export default function Dashboard() {
   const {
     bookings,
