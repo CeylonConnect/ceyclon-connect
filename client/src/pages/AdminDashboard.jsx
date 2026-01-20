@@ -16,6 +16,7 @@ export default function AdminDashboard() {
   const location = useLocation();
   const role = (user?.role || "").toString().toLowerCase();
 
+  
   const [tab, setTab] = useState("badge");
 
   // Allow deep-linking into a tab (e.g. /admin?tab=disputes)
