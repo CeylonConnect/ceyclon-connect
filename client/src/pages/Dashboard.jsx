@@ -36,6 +36,7 @@ export default function Dashboard() {
 
   const role = (user?.role || "tourist").toString().toLowerCase();
 
+  
   // Read banner param
   const justBooked = new URLSearchParams(location.search).get("booking");
 
