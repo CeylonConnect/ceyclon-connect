@@ -15,6 +15,7 @@ import LocalDashboard from "./pages/LocalDashboard.jsx";
 import { AuthProvider } from "./state/AuthContext";
 import { BookingProvider } from "./state/BookingContext";
 
+
 export default function App() {
   return (
     <AuthProvider>
