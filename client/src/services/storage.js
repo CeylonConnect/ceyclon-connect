@@ -7,6 +7,7 @@ export function setToken(token) {
   else localStorage.removeItem('token')
 }
 
+
 export function getUser() {
   const raw = localStorage.getItem('user')
   if (!raw || raw === 'undefined' || raw === 'null') return null
