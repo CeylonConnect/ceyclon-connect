@@ -18,7 +18,6 @@ function Hero() {
     </section>
   );
 }
-
 export default function EventsPage() {
   return (
     <>
