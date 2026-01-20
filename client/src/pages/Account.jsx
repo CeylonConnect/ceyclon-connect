@@ -20,6 +20,7 @@ export default function Account() {
     }
   }, [initializing, user, navigate, location.pathname, location.search]);
 
+  
   if (initializing || !user) {
     return (
       <>
