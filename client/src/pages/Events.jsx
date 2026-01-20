@@ -19,7 +19,6 @@ function Hero() {
   );
 }
 
-
 export default function EventsPage() {
   return (
     <>
