@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Avatar from "../components/ui/avatar";
 import { useAuth } from "../state/AuthContext";
 
+
 function StatCard({ label, value }) {
   return (
     <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-black">
