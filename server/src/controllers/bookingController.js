@@ -118,13 +118,22 @@ export const getBookingsByTourist = async (req, res) => {
 // ✅ Get bookings by provider
 export const getBookingsByProvider = async (req, res) => {
   try {
-    const bookings = await Booking.findByProvider(req.params.providerId);
+    const providerId = Number(req.params.providerId);
+    if (!Number.isFinite(providerId)) {
+      return res.status(400).json({ error: "Invalid provider id" });
+    }
+
+    const isSelf = Number(req.user?.user_id) === providerId;
+    if (!isSelf) return res.status(403).json({ error: "Forbidden" });
+
+    const bookings = await Booking.findByProvider(providerId);
     res.json(bookings);
   } catch (error) {
     console.error("Error fetching provider bookings:", error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // ✅ Update booking status
 export const updateBookingStatus = async (req, res) => {
