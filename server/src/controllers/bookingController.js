@@ -138,17 +138,97 @@ export const getBookingsByProvider = async (req, res) => {
 // ✅ Update booking status
 export const updateBookingStatus = async (req, res) => {
   try {
-    const { status } = req.body;
-    const updatedBooking = await Booking.updateStatus(req.params.id, status);
+    const bookingId = Number(req.params.id);
+    if (!Number.isFinite(bookingId)) {
+      return res.status(400).json({ error: "Invalid booking id" });
+    }
+
+    const raw = String(req.body?.status || "")
+      .toLowerCase()
+      .trim();
+    const status =
+      raw === "approved"
+        ? "confirmed"
+        : raw === "declined" || raw === "rejected"
+        ? "cancelled"
+        : raw;
+
+    const allowed = new Set(["pending", "confirmed", "cancelled", "completed"]);
+    if (!allowed.has(status)) {
+      return res.status(400).json({ error: "Invalid status" });
+    }
+
+    // Only the tour provider can change status
+    const booking = await Booking.findById(bookingId);
+    if (!booking) return res.status(404).json({ error: "Booking not found" });
+
+    const providerId = Number(booking.provider_id);
+    if (!providerId || Number(req.user?.user_id) !== providerId) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
+    // Transition rules
+    const current = String(booking.status || "pending").toLowerCase();
+    const okTransition =
+      (current === "pending" &&
+        (status === "confirmed" || status === "cancelled")) ||
+      (current === "confirmed" && status === "completed") ||
+      status === current;
+
+    if (!okTransition) {
+      return res
+        .status(400)
+        .json({ error: `Invalid status transition: ${current} -> ${status}` });
+    }
+
+    const updatedBooking = await Booking.updateStatus(bookingId, status);
 
     if (!updatedBooking)
       return res.status(404).json({ error: "Booking not found" });
-    res.json(updatedBooking);
+    const hydrated = await Booking.findById(bookingId);
+
+    // Tourist notification: booking status updated by local
+    try {
+      if (status !== current) {
+        const row = hydrated || updatedBooking || booking;
+        const touristId = Number(row?.tourist_id);
+        if (Number.isFinite(touristId)) {
+          const tourTitle = row?.tour_title || "your tour";
+          const statusLabel =
+            status === "confirmed"
+              ? "Approved"
+              : status === "cancelled"
+              ? "Cancelled"
+              : status === "completed"
+              ? "Completed"
+              : status;
+
+          await Notification.create({
+            user_id: touristId,
+            type: "booking_status_updated",
+            title: `Booking ${statusLabel}`,
+            message: `Your booking for ${tourTitle} has been ${statusLabel.toLowerCase()}.`,
+            link: "/dashboard",
+            metadata: {
+              booking_id: Number(row?.booking_id || bookingId),
+              tour_id: Number(row?.tour_id || booking?.tour_id),
+              provider_id: Number(row?.provider_id || booking?.provider_id),
+              status,
+            },
+          });
+        }
+      }
+    } catch {
+      // ignore
+    }
+
+    res.json(hydrated || updatedBooking);
   } catch (error) {
     console.error("Error updating booking status:", error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // ✅ Get all bookings (with optional filters)
 export const getAllBookings = async (req, res) => {
