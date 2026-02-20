@@ -97,7 +97,17 @@ export const getBookingById = async (req, res) => {
 // ✅ Get bookings by tourist
 export const getBookingsByTourist = async (req, res) => {
   try {
-    const bookings = await Booking.findByTourist(req.params.touristId);
+    const touristId = Number(req.params.touristId);
+    if (!Number.isFinite(touristId)) {
+      return res.status(400).json({ error: "Invalid tourist id" });
+    }
+
+    const isAdmin = String(req.user?.role || "").toLowerCase() === "admin";
+    const isSelf = Number(req.user?.user_id) === touristId;
+    if (!isAdmin && !isSelf)
+      return res.status(403).json({ error: "Forbidden" });
+
+    const bookings = await Booking.findByTourist(touristId);
     res.json(bookings);
   } catch (error) {
     console.error("Error fetching tourist bookings:", error);
