@@ -1,12 +1,20 @@
-const baseUrl = import.meta.env?.VITE_API_BASE_URL || "/api";
+const baseUrl =
+  import.meta.env?.VITE_API_BASE_URL || "http://localhost:5000/api";
 
 async function request(path, opts = {}) {
   const { body, headers = {}, method = "GET", ...rest } = opts;
+  const token =
+    (typeof window !== "undefined" &&
+      (localStorage.getItem("token") ||
+        localStorage.getItem("access_token") ||
+        sessionStorage.getItem("token"))) ||
+    "";
   const res = await fetch(`${baseUrl}${path}`, {
     method,
     credentials: "include",
     headers: {
       ...(body ? { "Content-Type": "application/json" } : {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
     ...(body ? { body: JSON.stringify(body) } : {}),
@@ -16,7 +24,26 @@ async function request(path, opts = {}) {
     let message = `${res.status} ${res.statusText}`;
     try {
       const j = await res.json();
+      const maybeBlocked = String(j?.message || j?.error || "");
       if (j?.error) message = j.error;
+
+      if (res.status === 403 && /account blocked/i.test(maybeBlocked)) {
+        try {
+          localStorage.removeItem("token");
+          localStorage.removeItem("access_token");
+          sessionStorage.removeItem("token");
+        } catch {
+          // ignore
+        }
+
+        if (typeof window !== "undefined") {
+          const here = window.location?.pathname || "";
+          if (!here.startsWith("/login")) {
+            window.location.href =
+              "/login?msg=" + encodeURIComponent("Account blocked");
+          }
+        }
+      }
     } catch {}
     throw new Error(message);
   }
