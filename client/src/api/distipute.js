@@ -15,6 +15,11 @@ function normalizeList(payload) {
 
 export const createDispute = (data) => api.post("/disputes", data);
 
+export const getMyDisputes = async () => {
+  const res = await api.get("/disputes/mine");
+  return normalizeList(res);
+};
+
 export const getAllDisputes = async (query = "") => {
   const res = await api.get(`/disputes${query ? `?${query}` : ""}`);
   return normalizeList(res);
